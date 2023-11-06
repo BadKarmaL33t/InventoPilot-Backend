@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
-    User findByRole(Role role);
+    User findByRole(Role role); // For admin dashboard
 }

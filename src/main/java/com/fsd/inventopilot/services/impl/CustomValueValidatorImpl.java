@@ -11,6 +11,6 @@ public class CustomValueValidatorImpl implements ConstraintValidator<AllowedValu
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return "USER".equals(value) || "ADMIN".equals(value);
+        return "USER".equals(value) || "ADMIN".equals(value) || "SUPERUSER".equals(value);
     }
 }
