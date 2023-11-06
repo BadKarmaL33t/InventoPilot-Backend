@@ -26,35 +26,35 @@ public class InventoPilotApplication implements CommandLineRunner {
 		User testingSuperAcc = userRepository.findByRole(Role.SUPERUSER);
 		User testingUserAcc = userRepository.findByRole(Role.USER);
 
-		if (null == testingAdminAcc) {
+		if (testingAdminAcc == null) {
 			User adm1n = new User();
 			adm1n.setUsername("Adm1n");
 			adm1n.setFirstname("Ad");
-			adm1n.setLastname("min");
+			adm1n.setLastname("Min");
 			adm1n.setEmail("adm1n.dummy@nothing.com");
 			adm1n.setRole(Role.ADMIN);
 			adm1n.setPassword(new BCryptPasswordEncoder().encode(System.getenv("adm1nPw")));
 			userRepository.save(adm1n);
 		}
-		if (null == testingSuperAcc) {
-			User Sup3r = new User();
-			Sup3r.setUsername("Adm1n");
-			Sup3r.setFirstname("Ad");
-			Sup3r.setLastname("min");
-			Sup3r.setEmail("Sup3r.dummy@nothing.com");
-			Sup3r.setRole(Role.ADMIN);
-			Sup3r.setPassword(new BCryptPasswordEncoder().encode(System.getenv("Sup3rPw")));
-			userRepository.save(Sup3r);
+		if (testingSuperAcc == null) {
+			User sup3r = new User();
+			sup3r.setUsername("Sup3r");
+			sup3r.setFirstname("Su");
+			sup3r.setLastname("Per");
+			sup3r.setEmail("sup3r.dummy@nothing.com");
+			sup3r.setRole(Role.SUPERUSER);
+			sup3r.setPassword(new BCryptPasswordEncoder().encode(System.getenv("sup3rPw")));
+			userRepository.save(sup3r);
 		}
-		if (null == testingUserAcc) {
-			User U5er = new User();
-			U5er.setUsername("Adm1n");
-			U5er.setFirstname("Ad");
-			U5er.setLastname("min");
-			U5er.setEmail("U5er.dummy@nothing.com");
-			U5er.setRole(Role.ADMIN);
-			U5er.setPassword(new BCryptPasswordEncoder().encode(System.getenv("U5erPw")));
-			userRepository.save(U5er);
+		if (testingUserAcc == null) {
+			User u5er = new User();
+			u5er.setUsername("U5er");
+			u5er.setFirstname("Us");
+			u5er.setLastname("Er");
+			u5er.setEmail("u5er.dummy@nothing.com");
+			u5er.setRole(Role.USER);
+			u5er.setPassword(new BCryptPasswordEncoder().encode(System.getenv("u5erPw")));
+			userRepository.save(u5er);
 		}
 	}
 }
