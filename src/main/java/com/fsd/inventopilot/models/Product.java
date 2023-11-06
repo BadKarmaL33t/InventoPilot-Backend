@@ -5,6 +5,12 @@ import lombok.Data;
 
 import java.util.Set;
 
+
+
+// TODO: 6-11-2023 repo's, DTOs, controllers en services maken voor orders, producten, componenten en locaties
+
+
+
 @Data
 @Entity
 @Table(name = "products")

@@ -8,6 +8,6 @@ public enum Status {
     AWAITING_MATERIALS,
     IN_STOCK,
     IN_PRODUCTION,
-    IN_TESTING,
+    BATCH_TESTING,
     SHIPPING
 }

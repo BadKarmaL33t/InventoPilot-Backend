@@ -18,4 +18,6 @@ public class OrderProduct {
     private Product product;
     @Column(nullable = false)
     private int quantity;
+    @Column(nullable = false)
+    private Status status;
 }
