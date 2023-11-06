@@ -4,7 +4,7 @@ import com.fsd.inventopilot.services.AllowedRole;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CustomValueValidatorImpl implements ConstraintValidator<AllowedRole, String> {
+public class RoleAllocationValidatorImpl implements ConstraintValidator<AllowedRole, String> {
     @Override
     public void initialize(AllowedRole allowedValue) {
     }

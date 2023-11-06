@@ -13,7 +13,7 @@ public class RawMaterial {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
-    private float quantity;
+    private int quantity;
     @Column(nullable = false)
     private String batchNumber;
     @Column(nullable = false)

@@ -5,26 +5,32 @@ import lombok.Data;
 
 import java.util.Set;
 
+
+// TO-DO: allowed component type annotations
+
+
 @Data
 @Entity
-@Table(name = "composites")
-public class Composite {
+@Table(name = "components")
+public class Component {
     @Id
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
-    private float quantity;
+    private ComponentType type;
+    @Column(nullable = false)
+    private int quantity;
     @Column(nullable = false)
     private String serialNumber;
     @Column(nullable = false)
     private int minimalStock;
     @Column(nullable = false)
     private int maximalStock;
-    @ManyToMany(mappedBy = "composites")
+    @ManyToMany(mappedBy = "components")
     private Set<Location> locations;
     @ManyToMany
-    @JoinTable(name = "composite_products",
-            joinColumns = @JoinColumn(name = "composite_id"),
+    @JoinTable(name = "components_products",
+            joinColumns = @JoinColumn(name = "components_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
     private Set<Product> products;
 }

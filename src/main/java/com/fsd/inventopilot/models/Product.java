@@ -18,21 +18,21 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private ProductType type;
-    @Column(nullable = false)
-    private float quantity;
+    @Column
+    private int stock;
+    @Column
+    private int sold;
     @Column(nullable = false)
     private String serialNumber;
-    @Column(nullable = false)
+    @Column
     private int minimalStock;
-    @Column(nullable = false)
+    @Column
     private int maximalStock;
-    @Column(nullable = false)
-    private Status status;
     @ManyToMany(mappedBy = "products")
     private Set<Location> locations;
     @ManyToOne
     @JoinColumn(name = "raw_materials_name")
     private RawMaterial rawMaterial;
     @ManyToMany(mappedBy = "products")
-    private Set<Composite> composites;
+    private Set<Component> components;
 }

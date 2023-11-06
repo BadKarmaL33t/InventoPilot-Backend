@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 
-// TO-DO: allowed department and allowed process annotations
+// TO-DO: allowed department annotations
 
 
 @Data
@@ -19,18 +19,13 @@ public class Location {
     @Column
     private String location;
     @ManyToMany
-    @JoinTable(name = "location_raw_material",
-            joinColumns = @JoinColumn(name = "location_id"),
-            inverseJoinColumns = @JoinColumn(name = "raw_material_id"))
-    private Set<RawMaterial> rawMaterials;
-    @ManyToMany
-    @JoinTable(name = "location_composites",
-            joinColumns = @JoinColumn(name = "location_id"),
+    @JoinTable(name = "locationscomposites",
+            joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "composites_id"))
-    private Set<Composite> composites;
+    private Set<Component> composites;
     @ManyToMany
-    @JoinTable(name = "location_products",
-            joinColumns = @JoinColumn(name = "location_id"),
+    @JoinTable(name = "locations_products",
+            joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
     private Set<Product> products;
 }
