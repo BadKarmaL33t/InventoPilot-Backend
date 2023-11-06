@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "components")
-public class Component {
+public class ProductComponent {
     @Id
     @Column(nullable = false, unique = true)
     private String name;

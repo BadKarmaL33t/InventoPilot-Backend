@@ -18,7 +18,7 @@ public class Location {
     @JoinTable(name = "locationscomposites",
             joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "composites_id"))
-    private Set<Component> composites;
+    private Set<ProductComponent> composites;
     @ManyToMany
     @JoinTable(name = "locations_products",
             joinColumns = @JoinColumn(name = "locations_id"),

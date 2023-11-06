@@ -36,5 +36,5 @@ public class Product {
     @JoinColumn(name = "raw_materials_name")
     private RawMaterial rawMaterial;
     @ManyToMany(mappedBy = "products")
-    private Set<Component> components;
+    private Set<ProductComponent> components;
 }
