@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) // means the annotation is available at runtime and can be accessed via reflection
 @Constraint(validatedBy = CustomValueValidatorImpl.class) //  specifies the class that implements the actual validation logic for the custom constraint
 @ReportAsSingleViolation // indicates that a single violation message should be reported for the constraint, even if multiple constraints are violated
-public @interface AllowedValue {
+public @interface AllowedRole {
     String message() default "Invalid value. Accepted values are USER, SUPERUSER or ADMIN";
 
     Class<?>[] groups() default {};

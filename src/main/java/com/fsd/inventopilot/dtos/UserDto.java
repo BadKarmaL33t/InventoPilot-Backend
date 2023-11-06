@@ -1,9 +1,9 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.services.AllowedRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import com.fsd.inventopilot.services.AllowedValue;
 import lombok.Data;
 
 @Data
@@ -20,6 +20,6 @@ public class UserDto {
     private String email;
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9';<>&|/\\\\]).{8,24}$")
     private String password;
-    @AllowedValue
+    @AllowedRole
     private String role;
 }

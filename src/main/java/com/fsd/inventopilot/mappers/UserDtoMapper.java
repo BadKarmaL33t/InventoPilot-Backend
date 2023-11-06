@@ -24,7 +24,6 @@ public class UserDtoMapper {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
 
-
         return dto;
     }
 
