@@ -23,7 +23,7 @@ public class AuthConfig {
         return customUserDetailsService;
     }
 
-    // AuthProvider Bean voor de SecurityFilterChain
+    // AuthProvider Bean for SecurityFilterChain
     @Bean
     public AuthenticationProvider authenticationProvider() {
         // data access object AuthProvider
