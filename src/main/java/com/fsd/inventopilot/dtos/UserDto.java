@@ -1,6 +1,6 @@
 package com.fsd.inventopilot.dtos;
 
-import com.fsd.inventopilot.services.AllowedRole;
+import com.fsd.inventopilot.validations.AllowedRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

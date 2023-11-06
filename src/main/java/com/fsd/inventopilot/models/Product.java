@@ -5,10 +5,6 @@ import lombok.Data;
 
 import java.util.Set;
 
-
-// TO-DO: allowed product type annotations
-
-
 @Data
 @Entity
 @Table(name = "products")

@@ -1,10 +1,10 @@
-package com.fsd.inventopilot.services.impl;
+package com.fsd.inventopilot.validations.impl;
 
-import com.fsd.inventopilot.services.AllowedRole;
+import com.fsd.inventopilot.validations.AllowedRole;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class RoleAllocationValidatorImpl implements ConstraintValidator<AllowedRole, String> {
+public class AllowedRoleImpl implements ConstraintValidator<AllowedRole, String> {
     @Override
     public void initialize(AllowedRole allowedValue) {
     }
