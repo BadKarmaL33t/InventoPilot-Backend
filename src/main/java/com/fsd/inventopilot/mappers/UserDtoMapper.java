@@ -6,6 +6,7 @@ import com.fsd.inventopilot.models.Role;
 import com.fsd.inventopilot.models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.BeanUtils;
 
 @Component
 public class UserDtoMapper {
@@ -18,11 +19,7 @@ public class UserDtoMapper {
     public UserDto mapToDto(User user) {
         UserDto dto = new UserDto();
 
-        dto.setUsername(user.getUsername());
-        dto.setFirstname(user.getFirstname());
-        dto.setLastname(user.getLastname());
-        dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
+        BeanUtils.copyProperties(user, dto);
 
         return dto;
     }
@@ -30,10 +27,7 @@ public class UserDtoMapper {
     public User mapToUser(RegisterRequest registerRequest) {
         User user = new User();
 
-        user.setUsername(registerRequest.getUsername());
-        user.setFirstname(registerRequest.getFirstname());
-        user.setLastname(registerRequest.getLastname());
-        user.setEmail(registerRequest.getEmail());
+        BeanUtils.copyProperties(registerRequest, user);
         user.setPassword(encoder.encode(registerRequest.getPassword()));
         user.setRole(Role.USER);
 

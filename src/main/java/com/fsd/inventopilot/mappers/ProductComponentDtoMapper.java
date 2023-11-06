@@ -3,21 +3,16 @@ package com.fsd.inventopilot.mappers;
 import com.fsd.inventopilot.dtos.ComponentDto;
 import com.fsd.inventopilot.models.ProductComponent;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.BeanUtils;
 
 import java.util.stream.Collectors;
-
 
 @Component
 public class ProductComponentDtoMapper {
     public static ComponentDto mapToDto(ProductComponent component) {
         ComponentDto dto = new ComponentDto();
 
-        dto.setName(component.getName());
-        dto.setType(component.getType());
-        dto.setQuantity(component.getQuantity());
-        dto.setSerialNumber(component.getSerialNumber());
-        dto.setMinimalStock(component.getMinimalStock());
-        dto.setMaximalStock(component.getMaximalStock());
+        BeanUtils.copyProperties(component, dto);
         dto.setLocations(component.getLocations().stream()
                 .map(LocationDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
@@ -31,12 +26,7 @@ public class ProductComponentDtoMapper {
     public static ProductComponent mapToEntity(ComponentDto dto) {
         ProductComponent component = new ProductComponent();
 
-        component.setName(dto.getName());
-        component.setType(dto.getType());
-        component.setQuantity(dto.getQuantity());
-        component.setSerialNumber(dto.getSerialNumber());
-        component.setMinimalStock(dto.getMinimalStock());
-        component.setMaximalStock(dto.getMaximalStock());
+        BeanUtils.copyProperties(dto, component);
         component.setLocations(dto.getLocations().stream()
                 .map(LocationDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));

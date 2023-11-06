@@ -3,6 +3,7 @@ package com.fsd.inventopilot.mappers;
 import com.fsd.inventopilot.dtos.LocationDto;
 import com.fsd.inventopilot.models.Location;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.BeanUtils;
 
 import java.util.stream.Collectors;
 
@@ -11,8 +12,7 @@ public class LocationDtoMapper {
     public static LocationDto mapToDto(Location location) {
         LocationDto dto = new LocationDto();
 
-        dto.setDepartment(location.getDepartment());
-        dto.setLocation(location.getLocation());
+        BeanUtils.copyProperties(location, dto);
         dto.setComposites(location.getComposites().stream()
                 .map(ProductComponentDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
@@ -22,11 +22,11 @@ public class LocationDtoMapper {
 
         return dto;
     }
+
     public static Location mapToEntity(LocationDto dto) {
         Location location = new Location();
 
-        location.setDepartment(dto.getDepartment());
-        location.setLocation(dto.getLocation());
+        BeanUtils.copyProperties(dto, location);
         location.setComposites(dto.getComposites().stream()
                 .map(ProductComponentDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));

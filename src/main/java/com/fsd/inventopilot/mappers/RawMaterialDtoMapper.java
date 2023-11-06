@@ -3,6 +3,7 @@ package com.fsd.inventopilot.mappers;
 import com.fsd.inventopilot.dtos.RawMaterialDto;
 import com.fsd.inventopilot.models.RawMaterial;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.BeanUtils;
 
 import java.util.stream.Collectors;
 
@@ -11,11 +12,7 @@ public class RawMaterialDtoMapper {
     public static RawMaterialDto mapToDto(RawMaterial rawMaterial) {
         RawMaterialDto dto = new RawMaterialDto();
 
-        dto.setName(rawMaterial.getName());
-        dto.setQuantity(rawMaterial.getQuantity());
-        dto.setBatchNumber(rawMaterial.getBatchNumber());
-        dto.setMinimalStock(rawMaterial.getMinimalStock());
-        dto.setMaximalStock(rawMaterial.getMaximalStock());
+        BeanUtils.copyProperties(rawMaterial, dto);
         dto.setLocations(rawMaterial.getLocations().stream()
                 .map(LocationDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
@@ -29,11 +26,7 @@ public class RawMaterialDtoMapper {
     public static RawMaterial mapToEntity(RawMaterialDto dto) {
         RawMaterial rawMaterial = new RawMaterial();
 
-        rawMaterial.setName(dto.getName());
-        rawMaterial.setQuantity(dto.getQuantity());
-        rawMaterial.setBatchNumber(dto.getBatchNumber());
-        rawMaterial.setMinimalStock(dto.getMinimalStock());
-        rawMaterial.setMaximalStock(dto.getMaximalStock());
+        BeanUtils.copyProperties(dto, rawMaterial);
         rawMaterial.setLocations(dto.getLocations().stream()
                 .map(LocationDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
