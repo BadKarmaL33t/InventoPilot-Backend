@@ -29,10 +29,33 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/secure/auth/**").permitAll()
                         .requestMatchers("/secure/admin/users", "/secure/admin/users/**").hasAuthority("ROLE_ADMIN")
-//                        .requestMatchers(HttpMethod.OPTIONS, "/app/users/**").permitAll()
-                        .requestMatchers("/app/users", "/app/users/**").authenticated()
-//                        .requestMatchers(HttpMethod.GET, "/posts", "/posts/**").permitAll()
-//                        .requestMatchers("/posts", "/posts/**").authenticated()
+                        .requestMatchers(HttpMethod.OPTIONS, "/app/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/app/locations",
+                                "/app/locations/**",
+                                "/app/orders",
+                                "/app/orders/**",
+                                "/app/components",
+                                "/app/components/**",
+                                "/app/products",
+                                "/app/products/**",
+                                "/app/raws",
+                                "/app/raws/**"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/app/users",
+                                "/app/users/**",
+                                "/app/locations",
+                                "/app/locations/**",
+                                "/app/orders",
+                                "/app/orders/**",
+                                "/app/components",
+                                "/app/components/**",
+                                "/app/products",
+                                "/app/products/**",
+                                "/app/raws",
+                                "/app/raws/**"
+                        ).authenticated()
                         .anyRequest().denyAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // .csrf(csrf -> csrf.disable())
