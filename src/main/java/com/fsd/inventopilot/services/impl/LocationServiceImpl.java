@@ -8,6 +8,7 @@ import com.fsd.inventopilot.models.Location;
 import com.fsd.inventopilot.repositories.LocationRepository;
 import com.fsd.inventopilot.services.LocationService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class LocationServiceImpl implements LocationService {
         this.locationDtoMapper = locationDtoMapper;
     }
 
+    @Transactional(readOnly = true)
     public List<LocationDto> getAllLocations() {
         List<Location> locations = locationRepository.findAll();
         return locations.stream()
@@ -29,6 +31,7 @@ public class LocationServiceImpl implements LocationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public LocationDto getLocationDtoByDepartment(Department department) {
         Location location = locationRepository.findByDepartment(department);
         if (location != null) {
@@ -38,16 +41,18 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
+    @Transactional
     public LocationDto postLocation(LocationDto locationDto) {
         Location location = locationDtoMapper.mapToEntity(locationDto);
         locationRepository.save(location);
         return locationDtoMapper.mapToDto(location);
     }
 
-    public LocationDto updateLocation(Department department, LocationDto newLocationDto) {
+    @Transactional
+    public LocationDto updateLocation(Department department, LocationDto newLocation) {
         Location existingLocation = locationRepository.findByDepartment(department);
         if (existingLocation != null) {
-            Location updatedLocation = locationDtoMapper.mapToEntity(newLocationDto);
+            Location updatedLocation = locationDtoMapper.mapToEntity(newLocation);
             updatedLocation.setDepartment(department);
             locationRepository.save(updatedLocation);
             return locationDtoMapper.mapToDto(updatedLocation);
@@ -56,6 +61,7 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
+    @Transactional
     public void deleteLocation(Department department) {
         Location location = locationRepository.findByDepartment(department);
         if (location != null) {
@@ -65,6 +71,7 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
+    @Transactional
     public LocationDto updateLocationDetails(Department department, LocationDto updatedLocation) {
         Location existingLocation = locationRepository.findByDepartment(department);
         if (existingLocation != null) {
