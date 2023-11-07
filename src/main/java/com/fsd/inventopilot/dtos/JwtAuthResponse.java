@@ -8,7 +8,7 @@ public class JwtAuthResponse {
 
     // Deze wordt meegestuurd voor de opdrachten meegestuurd met de response,
     // zodat hij kan worden getest in postman met een dummy functie.
-    // In de praktijk zou ik deze token niet letterlijk declareren in opbjecten die worden verzonden
+    // In de praktijk zou ik deze token niet letterlijk declareren in objecten die worden verzonden
     private String refreshToken;
 }
 
