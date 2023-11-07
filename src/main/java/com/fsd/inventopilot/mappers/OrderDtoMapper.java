@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderDtoMapper {
+    private final OrderProductDtoMapper orderProductDtoMapper;
+
+    public OrderDtoMapper(OrderProductDtoMapper orderProductDtoMapper) {
+        this.orderProductDtoMapper = orderProductDtoMapper;
+    }
+
     public OrderDto mapToDto(Order order) {
         OrderDto dto = new OrderDto();
 
@@ -21,7 +27,7 @@ public class OrderDtoMapper {
         if (order.getOrderProducts() != null) {
             Set<OrderProductDto> orderProductDtos = order.getOrderProducts()
                     .stream()
-                    .map(OrderProductDtoMapper::mapToDto)
+                    .map(orderProductDtoMapper::mapToDto)
                     .collect(Collectors.toSet());
             dto.setOrderProducts(orderProductDtos);
         }
@@ -37,7 +43,7 @@ public class OrderDtoMapper {
         if (dto.getOrderProducts() != null) {
             Set<OrderProduct> orderProducts = dto.getOrderProducts()
                     .stream()
-                    .map(OrderProductDtoMapper::mapToEntity)
+                    .map(orderProductDtoMapper::mapToEntity)
                     .collect(Collectors.toSet());
             order.setOrderProducts(orderProducts);
         }

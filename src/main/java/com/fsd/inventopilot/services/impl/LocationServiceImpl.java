@@ -39,7 +39,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     public LocationDto postLocation(LocationDto locationDto) {
-        Location location = LocationDtoMapper.mapToEntity(locationDto);
+        Location location = locationDtoMapper.mapToEntity(locationDto);
         locationRepository.save(location);
         return locationDtoMapper.mapToDto(location);
     }
@@ -47,7 +47,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationDto updateLocation(Department department, LocationDto newLocationDto) {
         Location existingLocation = locationRepository.findByDepartment(department);
         if (existingLocation != null) {
-            Location updatedLocation = LocationDtoMapper.mapToEntity(newLocationDto);
+            Location updatedLocation = locationDtoMapper.mapToEntity(newLocationDto);
             updatedLocation.setDepartment(department);
             locationRepository.save(updatedLocation);
             return locationDtoMapper.mapToDto(updatedLocation);
@@ -68,7 +68,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationDto updateLocationDetails(Department department, LocationDto updatedLocation) {
         Location existingLocation = locationRepository.findByDepartment(department);
         if (existingLocation != null) {
-            Location updatedLocationEntity = LocationDtoMapper.mapToEntity(updatedLocation);
+            Location updatedLocationEntity = locationDtoMapper.mapToEntity(updatedLocation);
             updatedLocationEntity.setDepartment(department);
             locationRepository.save(updatedLocationEntity);
             return locationDtoMapper.mapToDto(updatedLocationEntity);

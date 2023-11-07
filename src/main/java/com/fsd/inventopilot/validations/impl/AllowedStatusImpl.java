@@ -12,6 +12,7 @@ public class AllowedStatusImpl implements ConstraintValidator<AllowedDepartment,
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return "AWAITING_MATERIALS".equals(value) ||
+                "RECEIVING".equals(value) ||
                 "IN_STOCK".equals(value) ||
                 "IN_PRODUCTION".equals(value) ||
                 "BATCH_TESTING".equals(value) ||

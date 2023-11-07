@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 
 @Component
 public class OrderProductDtoMapper {
-    public static OrderProductDto mapToDto(OrderProduct orderProduct) {
+    public OrderProductDto mapToDto(OrderProduct orderProduct) {
         OrderProductDto dto = new OrderProductDto();
 
         BeanUtils.copyProperties(orderProduct, dto);
@@ -15,7 +15,7 @@ public class OrderProductDtoMapper {
         return dto;
     }
 
-    public static OrderProduct mapToEntity(OrderProductDto dto) {
+    public OrderProduct mapToEntity(OrderProductDto dto) {
         OrderProduct orderProduct = new OrderProduct();
 
         BeanUtils.copyProperties(dto, orderProduct);

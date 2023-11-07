@@ -1,11 +1,8 @@
 package com.fsd.inventopilot.models;
 
-
-// order status enum, TO-DO: order class maken
-
-
 public enum Status {
     AWAITING_MATERIALS,
+    RECEIVING,
     IN_STOCK,
     IN_PRODUCTION,
     BATCH_TESTING,

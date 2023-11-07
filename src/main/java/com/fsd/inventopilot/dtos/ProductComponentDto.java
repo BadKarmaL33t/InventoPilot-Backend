@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Transactional
-public class ComponentDto {
+public class ProductComponentDto {
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     @Size(min = 2, max = 20)
     private String name;

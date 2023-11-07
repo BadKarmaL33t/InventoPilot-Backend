@@ -15,10 +15,9 @@ public class LocationDto {
     @AllowedDepartment
     private Department department;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    @Size(min = 2, max = 10)
-    private String location;
+    private Set<ProductComponentDto> composites;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ComponentDto> composites;
+    private Set<RawMaterialDto> rawMaterials;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Set<ProductDto> products;
 }

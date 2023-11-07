@@ -9,29 +9,38 @@ import java.util.stream.Collectors;
 
 @Component
 public class RawMaterialDtoMapper {
-    public static RawMaterialDto mapToDto(RawMaterial rawMaterial) {
+    private final LocationDtoMapper locationDtoMapper;
+    private final ProductDtoMapper productDtoMapper;
+
+    public RawMaterialDtoMapper(LocationDtoMapper locationDtoMapper, ProductDtoMapper productDtoMapper) {
+        this.locationDtoMapper = locationDtoMapper;
+        this.productDtoMapper = productDtoMapper;
+    }
+
+
+    public RawMaterialDto mapToDto(RawMaterial rawMaterial) {
         RawMaterialDto dto = new RawMaterialDto();
 
         BeanUtils.copyProperties(rawMaterial, dto);
         dto.setLocations(rawMaterial.getLocations().stream()
-                .map(LocationDtoMapper::mapToDto)
+                .map(locationDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
         dto.setProducts(rawMaterial.getProducts().stream()
-                .map(ProductDtoMapper::mapToDto)
+                .map(productDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
 
         return dto;
     }
 
-    public static RawMaterial mapToEntity(RawMaterialDto dto) {
+    public RawMaterial mapToEntity(RawMaterialDto dto) {
         RawMaterial rawMaterial = new RawMaterial();
 
         BeanUtils.copyProperties(dto, rawMaterial);
         rawMaterial.setLocations(dto.getLocations().stream()
-                .map(LocationDtoMapper::mapToEntity)
+                .map(locationDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
         rawMaterial.setProducts(dto.getProducts().stream()
-                .map(ProductDtoMapper::mapToEntity)
+                .map(productDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
 
         return rawMaterial;

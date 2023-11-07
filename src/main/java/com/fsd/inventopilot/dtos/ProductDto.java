@@ -32,5 +32,5 @@ public class ProductDto {
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private RawMaterialDto rawMaterial;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ComponentDto> components;
+    private Set<ProductComponentDto> components;
 }

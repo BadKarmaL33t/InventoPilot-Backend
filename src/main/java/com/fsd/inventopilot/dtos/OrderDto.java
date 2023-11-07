@@ -1,5 +1,7 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.Status;
+import com.fsd.inventopilot.validations.AllowedStatus;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.transaction.Transactional;
@@ -17,4 +19,6 @@ public class OrderDto {
     private Set<OrderProductDto> orderProducts;
     @Temporal(TemporalType.TIMESTAMP)
     private String orderDate;
+    @AllowedStatus
+    private Status status;
 }

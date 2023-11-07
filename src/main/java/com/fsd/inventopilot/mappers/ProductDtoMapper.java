@@ -9,31 +9,41 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductDtoMapper {
-    public static ProductDto mapToDto(Product product) {
+    private final LocationDtoMapper locationDtoMapper;
+    private final ProductComponentDtoMapper productComponentDtoMapper;
+    private final RawMaterialDtoMapper rawMaterialDtoMapper;
+
+    public ProductDtoMapper(LocationDtoMapper locationDtoMapper, ProductComponentDtoMapper productComponentDtoMapper, RawMaterialDtoMapper rawMaterialDtoMapper) {
+        this.locationDtoMapper = locationDtoMapper;
+        this.productComponentDtoMapper = productComponentDtoMapper;
+        this.rawMaterialDtoMapper = rawMaterialDtoMapper;
+    }
+
+    public ProductDto mapToDto(Product product) {
         ProductDto dto = new ProductDto();
 
         BeanUtils.copyProperties(product, dto);
         dto.setLocations(product.getLocations().stream()
-                .map(LocationDtoMapper::mapToDto)
+                .map(locationDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
-        dto.setRawMaterial(RawMaterialDtoMapper.mapToDto(product.getRawMaterial()));
+        dto.setRawMaterial(rawMaterialDtoMapper.mapToDto(product.getRawMaterial()));
         dto.setComponents(product.getComponents().stream()
-                .map(ProductComponentDtoMapper::mapToDto)
+                .map(productComponentDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
 
         return dto;
     }
 
-    public static Product mapToEntity(ProductDto dto) {
+    public Product mapToEntity(ProductDto dto) {
         Product product = new Product();
 
         BeanUtils.copyProperties(dto, product);
         product.setLocations(dto.getLocations().stream()
-                .map(LocationDtoMapper::mapToEntity)
+                .map(locationDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
-        product.setRawMaterial(RawMaterialDtoMapper.mapToEntity(dto.getRawMaterial()));
+        product.setRawMaterial(rawMaterialDtoMapper.mapToEntity(dto.getRawMaterial()));
         product.setComponents(dto.getComponents().stream()
-                .map(ProductComponentDtoMapper::mapToEntity)
+                .map(productComponentDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
 
         return product;

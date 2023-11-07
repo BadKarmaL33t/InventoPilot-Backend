@@ -19,4 +19,6 @@ public class Order {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
+    @Column
+    private Status status;
 }

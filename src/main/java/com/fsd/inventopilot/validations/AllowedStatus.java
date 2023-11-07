@@ -1,6 +1,5 @@
 package com.fsd.inventopilot.validations;
 
-import com.fsd.inventopilot.validations.impl.AllowedRoleImpl;
 import com.fsd.inventopilot.validations.impl.AllowedStatusImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -17,7 +16,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = AllowedStatusImpl.class) //  specifies the class that implements the actual validation logic for the custom constraint
 @ReportAsSingleViolation // indicates that a single violation message should be reported for the constraint, even if multiple constraints are violated
 public @interface AllowedStatus {
-    String message() default "Invalid value. Accepted values are AWAITING_MATERIALS, IN_STOCK, IN_PRODUCTION, BATCH_TESTING or SHIPPING";
+    String message() default "Invalid value. Accepted values are AWAITING_MATERIALS, RECEIVING, IN_STOCK, IN_PRODUCTION, BATCH_TESTING or SHIPPING";
 
     Class<?>[] groups() default {};
 
