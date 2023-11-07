@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> postOrder(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<OrderDto> postOrder(@RequestBody OrderDto orderDto) throws ParseException {
         OrderDto dto = orderService.postOrder(orderDto);
 
         URI location = ServletUriComponentsBuilder
@@ -56,7 +57,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @RequestBody OrderDto newOrder) {
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @RequestBody OrderDto newOrder) throws ParseException {
         OrderDto dto = orderService.updateOrder(id, newOrder);
 
         return ResponseEntity.ok().body(dto);
