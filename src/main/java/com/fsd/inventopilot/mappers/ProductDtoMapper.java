@@ -4,19 +4,16 @@ import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
 
 import java.util.stream.Collectors;
 
 @Component
 public class ProductDtoMapper {
-    private final LocationDtoMapper locationDtoMapper;
-    private final ProductComponentDtoMapper productComponentDtoMapper;
-    private final RawMaterialDtoMapper rawMaterialDtoMapper;
+    private final ApplicationContext applicationContext;
 
-    public ProductDtoMapper(LocationDtoMapper locationDtoMapper, ProductComponentDtoMapper productComponentDtoMapper, RawMaterialDtoMapper rawMaterialDtoMapper) {
-        this.locationDtoMapper = locationDtoMapper;
-        this.productComponentDtoMapper = productComponentDtoMapper;
-        this.rawMaterialDtoMapper = rawMaterialDtoMapper;
+    public ProductDtoMapper(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     public ProductDto mapToDto(Product product) {
@@ -24,11 +21,11 @@ public class ProductDtoMapper {
 
         BeanUtils.copyProperties(product, dto);
         dto.setLocations(product.getLocations().stream()
-                .map(locationDtoMapper::mapToDto)
+                .map(location -> getLocationDtoMapper().mapToDto(location))
                 .collect(Collectors.toSet()));
-        dto.setRawMaterial(rawMaterialDtoMapper.mapToDto(product.getRawMaterial()));
+        dto.setRawMaterial(getRawMaterialDtoMapper().mapToDto(product.getRawMaterial()));
         dto.setComponents(product.getComponents().stream()
-                .map(productComponentDtoMapper::mapToDto)
+                .map(productComponent -> getProductComponentDtoMapper().mapToDto(productComponent))
                 .collect(Collectors.toSet()));
 
         return dto;
@@ -39,13 +36,26 @@ public class ProductDtoMapper {
 
         BeanUtils.copyProperties(dto, product);
         product.setLocations(dto.getLocations().stream()
-                .map(locationDtoMapper::mapToEntity)
+                .map(location -> getLocationDtoMapper().mapToEntity(location))
                 .collect(Collectors.toSet()));
-        product.setRawMaterial(rawMaterialDtoMapper.mapToEntity(dto.getRawMaterial()));
+        product.setRawMaterial(getRawMaterialDtoMapper().mapToEntity(dto.getRawMaterial()));
         product.setComponents(dto.getComponents().stream()
-                .map(productComponentDtoMapper::mapToEntity)
+                .map(productComponent -> getProductComponentDtoMapper().mapToEntity(productComponent))
                 .collect(Collectors.toSet()));
 
         return product;
+    }
+
+    // Lazily initialize the mappers to prevent circular dependencies
+    private LocationDtoMapper getLocationDtoMapper() {
+        return applicationContext.getBean(LocationDtoMapper.class);
+    }
+
+    private RawMaterialDtoMapper getRawMaterialDtoMapper() {
+        return applicationContext.getBean(RawMaterialDtoMapper.class);
+    }
+
+    private ProductComponentDtoMapper getProductComponentDtoMapper() {
+        return applicationContext.getBean(ProductComponentDtoMapper.class);
     }
 }
