@@ -7,6 +7,7 @@ import com.fsd.inventopilot.models.ProductComponent;
 import com.fsd.inventopilot.repositories.ProductComponentRepository;
 import com.fsd.inventopilot.services.ProductComponentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         this.componentDtoMapper = componentDtoMapper;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductComponentDto> getAllComponents() {
         List<ProductComponent> components = componentRepository.findAll();
         return components.stream()
@@ -28,6 +30,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ProductComponentDto getComponentDetails(String name) {
         ProductComponent existingComponent = componentRepository.findByName(name);
         if (existingComponent != null) {
@@ -36,12 +39,14 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
+    @Transactional
     public ProductComponentDto postComponent(ProductComponentDto componentDto) {
         ProductComponent component = componentDtoMapper.mapToEntity(componentDto);
         componentRepository.save(component);
         return componentDtoMapper.mapToDto(component);
     }
 
+    @Transactional
     public ProductComponentDto updateComponent(String name, ProductComponentDto newComponent) {
         ProductComponent existingComponent = componentRepository.findByName(name);
         if (existingComponent != null) {
@@ -59,6 +64,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
+    @Transactional
     public void deleteComponent(String name) {
         ProductComponent component = componentRepository.findByName(name);
         if (component != null) {
@@ -67,6 +73,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
+    @Transactional
     public ProductComponentDto updateComponentDetails(String name, ProductComponentDto updatedComponent) {
         ProductComponent existingComponent = componentRepository.findByName(name);
         if (existingComponent != null) {
