@@ -5,12 +5,6 @@ import lombok.Data;
 
 import java.util.Set;
 
-
-
-// TODO: 6-11-2023 repo's, DTOs, controllers en services maken voor orders, producten, componenten en locaties
-
-
-
 @Data
 @Entity
 @Table(name = "products")
@@ -33,7 +27,7 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private Set<Location> locations;
     @ManyToOne
-    @JoinColumn(name = "raw_materials_name")
+    @JoinColumn(name = "rawMaterial_name")
     private RawMaterial rawMaterial;
     @ManyToMany(mappedBy = "products")
     private Set<ProductComponent> components;

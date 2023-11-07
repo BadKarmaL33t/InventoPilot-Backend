@@ -1,8 +1,6 @@
 package com.fsd.inventopilot.validations.impl;
 
 import com.fsd.inventopilot.validations.AllowedComponentType;
-import com.fsd.inventopilot.validations.AllowedProductType;
-import com.fsd.inventopilot.validations.AllowedRole;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

@@ -13,7 +13,7 @@ public class LocationDtoMapper {
         LocationDto dto = new LocationDto();
 
         BeanUtils.copyProperties(location, dto);
-        dto.setComposites(location.getComposites().stream()
+        dto.setComposites(location.getComponents().stream()
                 .map(ProductComponentDtoMapper::mapToDto)
                 .collect(Collectors.toSet()));
         dto.setProducts(location.getProducts().stream()
@@ -27,7 +27,7 @@ public class LocationDtoMapper {
         Location location = new Location();
 
         BeanUtils.copyProperties(dto, location);
-        location.setComposites(dto.getComposites().stream()
+        location.setComponents(dto.getComposites().stream()
                 .map(ProductComponentDtoMapper::mapToEntity)
                 .collect(Collectors.toSet()));
         location.setProducts(dto.getProducts().stream()

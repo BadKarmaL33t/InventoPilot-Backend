@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "components")
+@Table(name = "product_components")
 public class ProductComponent {
     @Id
     @Column(nullable = false, unique = true)
@@ -25,8 +25,8 @@ public class ProductComponent {
     @ManyToMany(mappedBy = "components")
     private Set<Location> locations;
     @ManyToMany
-    @JoinTable(name = "components_products",
-            joinColumns = @JoinColumn(name = "components_id"),
+    @JoinTable(name = "product_components_products",
+            joinColumns = @JoinColumn(name = "product_components_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
     private Set<Product> products;
 }

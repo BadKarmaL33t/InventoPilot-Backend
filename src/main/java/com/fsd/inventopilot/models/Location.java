@@ -15,10 +15,15 @@ public class Location {
     @Column
     private String location;
     @ManyToMany
-    @JoinTable(name = "locationscomposites",
+    @JoinTable(name = "locations_product_components",
             joinColumns = @JoinColumn(name = "locations_id"),
-            inverseJoinColumns = @JoinColumn(name = "composites_id"))
-    private Set<ProductComponent> composites;
+            inverseJoinColumns = @JoinColumn(name = "product_components_id"))
+    private Set<ProductComponent> components;
+    @ManyToMany
+    @JoinTable(name = "locations_raw_materials",
+            joinColumns = @JoinColumn(name = "locations_id"),
+            inverseJoinColumns = @JoinColumn(name = "raw_materials_id"))
+    private Set<RawMaterial> rawMaterials;
     @ManyToMany
     @JoinTable(name = "locations_products",
             joinColumns = @JoinColumn(name = "locations_id"),

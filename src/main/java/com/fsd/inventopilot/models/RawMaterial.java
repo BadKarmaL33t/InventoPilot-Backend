@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "raw_materials")
+@Table(name = "rawMaterials")
 public class RawMaterial {
     @Id
     @Column(nullable = false, unique = true)
@@ -20,8 +20,8 @@ public class RawMaterial {
     private int minimalStock;
     @Column(nullable = false)
     private int maximalStock;
-    @ManyToMany(mappedBy = "raw_materials")
+    @ManyToMany(mappedBy = "rawMaterials")
     private Set<Location> locations;
-    @OneToMany(mappedBy = "raw_materials")
+    @OneToMany(mappedBy = "rawMaterial")
     private Set<Product> products;
 }
