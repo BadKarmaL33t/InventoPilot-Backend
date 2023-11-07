@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class LocationDtoMapper {
-    public static LocationDto mapToDto(Location location) {
+    public LocationDto mapToDto(Location location) {
         LocationDto dto = new LocationDto();
 
         BeanUtils.copyProperties(location, dto);

@@ -12,8 +12,6 @@ public class Location {
     @Id
     @Column(nullable = false, unique = true)
     private Department department;
-    @Column
-    private String location;
     @ManyToMany
     @JoinTable(name = "locations_product_components",
             joinColumns = @JoinColumn(name = "locations_id"),
