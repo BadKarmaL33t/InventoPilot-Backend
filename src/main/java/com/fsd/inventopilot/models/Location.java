@@ -28,5 +28,3 @@ public class Location {
             inverseJoinColumns = @JoinColumn(name = "products_id"))
     private Set<Product> products;
 }
-
-// TODO: 8-11-2023 product and item creation will add the product to location warehouse logic

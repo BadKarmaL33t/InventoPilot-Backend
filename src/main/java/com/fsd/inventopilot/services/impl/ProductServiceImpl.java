@@ -3,10 +3,8 @@ package com.fsd.inventopilot.services.impl;
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductDtoMapper;
-import com.fsd.inventopilot.models.Product;
-import com.fsd.inventopilot.models.ProductComponent;
-import com.fsd.inventopilot.models.ProductType;
-import com.fsd.inventopilot.models.RawMaterial;
+import com.fsd.inventopilot.models.*;
+import com.fsd.inventopilot.repositories.LocationRepository;
 import com.fsd.inventopilot.repositories.ProductRepository;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.stereotype.Service;
@@ -20,10 +18,12 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductDtoMapper productDtoMapper;
+    private final LocationRepository locationRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository) {
         this.productRepository = productRepository;
         this.productDtoMapper = productDtoMapper;
+        this.locationRepository = locationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -54,6 +54,14 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductDto postProduct(ProductDto productDto) {
         Product product = productDtoMapper.mapToEntity(productDto);
+
+        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse != null) {
+            warehouse.getProducts().add(product);
+        } else {
+            throw new RecordNotFoundException("Location warehouse could not be found");
+        }
+
         productRepository.save(product);
         return productDtoMapper.mapToDto(product);
     }

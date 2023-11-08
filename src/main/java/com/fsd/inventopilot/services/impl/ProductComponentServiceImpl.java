@@ -3,7 +3,10 @@ package com.fsd.inventopilot.services.impl;
 import com.fsd.inventopilot.dtos.ProductComponentDto;
 import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductComponentDtoMapper;
+import com.fsd.inventopilot.models.Department;
+import com.fsd.inventopilot.models.Location;
 import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.repositories.LocationRepository;
 import com.fsd.inventopilot.repositories.ProductComponentRepository;
 import com.fsd.inventopilot.services.ProductComponentService;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,12 @@ import java.util.stream.Collectors;
 public class ProductComponentServiceImpl implements ProductComponentService {
     private final ProductComponentRepository componentRepository;
     private final ProductComponentDtoMapper componentDtoMapper;
+    private final LocationRepository locationRepository;
 
-    public ProductComponentServiceImpl(ProductComponentRepository componentRepository, ProductComponentDtoMapper componentDtoMapper) {
+    public ProductComponentServiceImpl(ProductComponentRepository componentRepository, ProductComponentDtoMapper componentDtoMapper, LocationRepository locationRepository) {
         this.componentRepository = componentRepository;
         this.componentDtoMapper = componentDtoMapper;
+        this.locationRepository = locationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -42,6 +47,14 @@ public class ProductComponentServiceImpl implements ProductComponentService {
     @Transactional
     public ProductComponentDto postComponent(ProductComponentDto componentDto) {
         ProductComponent component = componentDtoMapper.mapToEntity(componentDto);
+
+        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse != null) {
+            warehouse.getComponents().add(component);
+        } else {
+            throw new RecordNotFoundException("Location warehouse could not be found");
+        }
+
         componentRepository.save(component);
         return componentDtoMapper.mapToDto(component);
     }

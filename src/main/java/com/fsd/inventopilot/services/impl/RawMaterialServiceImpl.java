@@ -3,23 +3,30 @@ package com.fsd.inventopilot.services.impl;
 import com.fsd.inventopilot.dtos.RawMaterialDto;
 import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.RawMaterialDtoMapper;
+import com.fsd.inventopilot.models.Department;
+import com.fsd.inventopilot.models.Location;
 import com.fsd.inventopilot.models.RawMaterial;
+import com.fsd.inventopilot.repositories.LocationRepository;
 import com.fsd.inventopilot.repositories.RawMaterialRepository;
 import com.fsd.inventopilot.services.RawMaterialService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class RawMaterialServiceImpl implements RawMaterialService {
     private final RawMaterialRepository rawMaterialRepository;
     private final RawMaterialDtoMapper rawMaterialDtoMapper;
+    private final LocationRepository locationRepository;
 
-    public RawMaterialServiceImpl(RawMaterialRepository rawMaterialRepository, RawMaterialDtoMapper rawMaterialDtoMapper) {
+    public RawMaterialServiceImpl(RawMaterialRepository rawMaterialRepository, RawMaterialDtoMapper rawMaterialDtoMapper, LocationRepository locationRepository) {
         this.rawMaterialRepository = rawMaterialRepository;
         this.rawMaterialDtoMapper = rawMaterialDtoMapper;
+        this.locationRepository = locationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -43,6 +50,14 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     @Transactional
     public RawMaterialDto postRawMaterial(RawMaterialDto rawMaterialDto) {
         RawMaterial rawMaterial = rawMaterialDtoMapper.mapToEntity(rawMaterialDto);
+
+        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse != null) {
+            warehouse.getRawMaterials().add(rawMaterial);
+        } else {
+            throw new RecordNotFoundException("Location warehouse could not be found");
+        }
+
         rawMaterialRepository.save(rawMaterial);
         return rawMaterialDtoMapper.mapToDto(rawMaterial);
     }
