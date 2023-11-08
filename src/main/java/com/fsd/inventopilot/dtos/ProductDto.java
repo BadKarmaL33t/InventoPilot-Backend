@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 public class ProductDto {
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String name;
     @AllowedProductType
     private ProductType type;

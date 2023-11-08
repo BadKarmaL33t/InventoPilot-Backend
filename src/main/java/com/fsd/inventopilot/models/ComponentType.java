@@ -6,7 +6,7 @@ public enum ComponentType {
     BOTTLE,
     CAP,
     INDUCTION_LINER,
-    INNER_BAG,
+    LABEL,
     PRINTED_BAG,
-    LABEL
+    INNER_BAG
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 public class ProductComponentDto {
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String name;
     @AllowedComponentType
     private ComponentType type;

@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class RawMaterialDto {
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String name;
     @Pattern(regexp = "[0-9]+")
     private int stock;

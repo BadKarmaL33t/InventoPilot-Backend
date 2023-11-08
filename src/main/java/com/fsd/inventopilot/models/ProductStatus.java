@@ -1,7 +1,7 @@
 package com.fsd.inventopilot.models;
 
 public enum ProductStatus {
+    AWAITING_BACKORDER,
     IN_STOCK,
-    OUT_OF_STOCK,
-    AWAITING_BACKORDER
+    OUT_OF_STOCK
 }
