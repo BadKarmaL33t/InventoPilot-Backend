@@ -13,7 +13,11 @@ public class RawMaterial {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
-    private int quantity;
+    private int stock;
+    @Column
+    private ProductStatus status;
+    @Column
+    private int used;
     @Column(nullable = false)
     private String batchNumber;
     @Column(nullable = false)

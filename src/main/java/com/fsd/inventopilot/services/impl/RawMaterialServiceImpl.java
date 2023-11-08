@@ -53,7 +53,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
         if (existingRawMaterial != null) {
             RawMaterial updatedRawMaterialEntity = rawMaterialDtoMapper.mapToEntity(newRawMaterial);
             updatedRawMaterialEntity.setName(name);
-            updatedRawMaterialEntity.setQuantity(newRawMaterial.getQuantity());
+            updatedRawMaterialEntity.setStock(newRawMaterial.getStock());
             updatedRawMaterialEntity.setBatchNumber(newRawMaterial.getBatchNumber());
             updatedRawMaterialEntity.setMinimalStock(newRawMaterial.getMinimalStock());
             updatedRawMaterialEntity.setMaximalStock(newRawMaterial.getMaximalStock());
@@ -79,8 +79,8 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     public RawMaterialDto updateRawMaterialDetails(String name, RawMaterialDto updatedRawMaterial) {
         RawMaterial existingRawMaterial = rawMaterialRepository.findByName(name);
         if (existingRawMaterial != null) {
-            if (updatedRawMaterial.getQuantity() != 0) {
-                existingRawMaterial.setQuantity(updatedRawMaterial.getQuantity());
+            if (updatedRawMaterial.getStock() != 0) {
+                existingRawMaterial.setStock(updatedRawMaterial.getStock());
             }
             if (updatedRawMaterial.getBatchNumber() != null) {
                 existingRawMaterial.setBatchNumber(updatedRawMaterial.getBatchNumber());

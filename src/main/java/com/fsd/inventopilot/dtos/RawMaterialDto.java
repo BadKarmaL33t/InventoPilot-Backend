@@ -1,5 +1,8 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.ProductStatus;
+import com.fsd.inventopilot.validations.AllowedProductStatus;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -12,7 +15,11 @@ public class RawMaterialDto {
     @Size(min = 2, max = 20)
     private String name;
     @Pattern(regexp = "[0-9]+")
-    private int quantity;
+    private int stock;
+    @AllowedProductStatus
+    private ProductStatus status;
+    @Pattern(regexp = "[0-9]+")
+    private int used;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String batchNumber;
     @Pattern(regexp = "[0-9]+")

@@ -2,6 +2,8 @@ package com.fsd.inventopilot.controllers;
 
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
+import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +66,26 @@ public class ProductController {
     @PatchMapping("/{name}")
     public ResponseEntity<ProductDto> updateProductDetails(@PathVariable String name, @RequestBody ProductDto updatedProduct) {
         ProductDto dto = productService.updateProductDetails(name, updatedProduct);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/{name}/raw")
+    public ResponseEntity<ProductDto> addRawMaterialToProduct(
+            @PathVariable("name") String productName,
+            @RequestBody RawMaterial rawMaterial) {
+
+        ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterial);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/{name}/components")
+    public ResponseEntity<ProductDto> addProductComponentToProduct(
+            @PathVariable("name") String productName,
+            @RequestBody ProductComponent productComponent) {
+
+        ProductDto dto = productService.addProductComponentToProduct(productName, productComponent);
 
         return ResponseEntity.ok().body(dto);
     }

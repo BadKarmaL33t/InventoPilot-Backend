@@ -2,6 +2,7 @@ package com.fsd.inventopilot.services;
 
 import com.fsd.inventopilot.dtos.OrderDto;
 import com.fsd.inventopilot.dtos.OrderProductDto;
+import com.fsd.inventopilot.models.OrderStatus;
 
 import java.text.ParseException;
 import java.util.List;
@@ -13,5 +14,6 @@ public interface OrderService {
     OrderDto updateOrder(Long id, OrderDto newOrder) throws ParseException;
     void deleteOrder(Long id);
     OrderDto updateOrderDetails(Long id, OrderDto updatedOrder);
-    OrderDto addProductsToCart(Long id, List<OrderProductDto> orderProductDtos);
+    OrderDto addProductsToOrder(Long id, List<OrderProductDto> orderProductDtos);
+    OrderDto updateOrderStatus(Long orderId, OrderStatus newStatus);
 }

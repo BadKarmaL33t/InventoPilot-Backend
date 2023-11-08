@@ -1,7 +1,10 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.models.ProductType;
+import com.fsd.inventopilot.validations.AllowedProductStatus;
 import com.fsd.inventopilot.validations.AllowedProductType;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,6 +20,8 @@ public class ProductDto {
     private ProductType type;
     @Pattern(regexp = "[0-9]+")
     private int stock;
+    @AllowedProductStatus
+    private ProductStatus status;
     @Pattern(regexp = "[0-9]+")
     private int sold;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")

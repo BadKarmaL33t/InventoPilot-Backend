@@ -3,6 +3,7 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.OrderDto;
 import com.fsd.inventopilot.dtos.OrderProductDto;
 import com.fsd.inventopilot.models.Order;
+import com.fsd.inventopilot.models.OrderStatus;
 import com.fsd.inventopilot.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +50,9 @@ public class OrderController {
         return ResponseEntity.created(location).body(dto);
     }
 
-    @PostMapping("/{id}/cart")
-    public ResponseEntity<OrderDto> addProductsToCart(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
-        OrderDto dto = orderService.addProductsToCart(id, orderProductDtos);
+    @PostMapping("/{id}/items")
+    public ResponseEntity<OrderDto> addProductsToOrder(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
+        OrderDto dto = orderService.addProductsToOrder(id, orderProductDtos);
 
         return ResponseEntity.ok().body(dto);
     }
@@ -75,5 +76,12 @@ public class OrderController {
         OrderDto dto = orderService.updateOrderDetails(id, updatedOrder);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam OrderStatus newStatus) {
+        OrderDto updatedOrder = orderService.updateOrderStatus(id, newStatus);
+
+        return ResponseEntity.ok().body(updatedOrder);
     }
 }

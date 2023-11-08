@@ -1,7 +1,9 @@
 package com.fsd.inventopilot.dtos;
 
 import com.fsd.inventopilot.models.ComponentType;
+import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedComponentType;
+import com.fsd.inventopilot.validations.AllowedProductStatus;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -16,7 +18,11 @@ public class ProductComponentDto {
     @AllowedComponentType
     private ComponentType type;
     @Pattern(regexp = "[0-9]+")
-    private int quantity;
+    private int stock;
+    @AllowedProductStatus
+    private ProductStatus status;
+    @Pattern(regexp = "[0-9]+")
+    private int used;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String serialNumber;
     @Pattern(regexp = "[0-9]+")

@@ -20,5 +20,5 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
     @Column
-    private Status status;
+    private OrderStatus status;
 }

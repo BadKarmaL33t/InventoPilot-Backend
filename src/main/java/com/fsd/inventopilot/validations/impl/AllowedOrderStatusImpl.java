@@ -4,18 +4,17 @@ import com.fsd.inventopilot.validations.AllowedDepartment;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AllowedStatusImpl implements ConstraintValidator<AllowedDepartment, String> {
+public class AllowedOrderStatusImpl implements ConstraintValidator<AllowedDepartment, String> {
     @Override
     public void initialize(AllowedDepartment allowedValue) {
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return "AWAITING_MATERIALS".equals(value) ||
-                "RECEIVING".equals(value) ||
-                "IN_STOCK".equals(value) ||
-                "IN_PRODUCTION".equals(value) ||
-                "BATCH_TESTING".equals(value) ||
-                "SHIPPING".equals(value);
+        return "AWAITING_MATERIAL".equals(value) ||
+                "ADD_TO_STOCK".equals(value) ||
+                "PRODUCTION".equals(value) ||
+                "TESTING".equals(value) ||
+                "SHIPPED".equals(value);
     }
 }

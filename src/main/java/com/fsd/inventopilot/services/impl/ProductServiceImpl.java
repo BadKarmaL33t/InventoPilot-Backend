@@ -4,12 +4,15 @@ import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductDtoMapper;
 import com.fsd.inventopilot.models.Product;
+import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.repositories.ProductRepository;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,5 +108,29 @@ public class ProductServiceImpl implements ProductService {
             return productDtoMapper.mapToDto(existingProduct);
         }
         throw new RecordNotFoundException("Product: " + name + " not found");
+    }
+
+    @Transactional
+    public ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial) {
+        Product existingProduct = productRepository.findByName(productName);
+        if (existingProduct != null) {
+            existingProduct.setRawMaterial(rawMaterial);
+            productRepository.save(existingProduct);
+            return productDtoMapper.mapToDto(existingProduct);
+        }
+        throw new RecordNotFoundException("Product: " + productName + " not found");
+    }
+
+    @Transactional
+    public ProductDto addProductComponentToProduct(String productName, ProductComponent productComponent) {
+        Product existingProduct = productRepository.findByName(productName);
+        if (existingProduct != null) {
+            Set<ProductComponent> productComponents = existingProduct.getComponents();
+            productComponents.add(productComponent);
+            existingProduct.setComponents(productComponents);
+            productRepository.save(existingProduct);
+            return productDtoMapper.mapToDto(existingProduct);
+        }
+        throw new RecordNotFoundException("Product: " + productName + " not found");
     }
 }

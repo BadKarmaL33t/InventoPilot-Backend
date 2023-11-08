@@ -3,8 +3,7 @@ package com.fsd.inventopilot.services.impl;
 import com.fsd.inventopilot.dtos.LocationDto;
 import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.LocationDtoMapper;
-import com.fsd.inventopilot.models.Department;
-import com.fsd.inventopilot.models.Location;
+import com.fsd.inventopilot.models.*;
 import com.fsd.inventopilot.repositories.LocationRepository;
 import com.fsd.inventopilot.services.LocationService;
 import org.springframework.stereotype.Service;
@@ -83,4 +82,6 @@ public class LocationServiceImpl implements LocationService {
             throw new RecordNotFoundException("Location: " + department + " not found");
         }
     }
+
+
 }
