@@ -77,11 +77,4 @@ public class OrderController {
 
         return ResponseEntity.ok().body(dto);
     }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam OrderStatus newStatus) {
-        OrderDto updatedOrder = orderService.updateOrderStatus(id, newStatus);
-
-        return ResponseEntity.ok().body(updatedOrder);
-    }
 }

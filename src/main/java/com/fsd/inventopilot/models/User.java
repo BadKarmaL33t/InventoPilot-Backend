@@ -25,8 +25,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
     private Role role;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Orders> posts = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

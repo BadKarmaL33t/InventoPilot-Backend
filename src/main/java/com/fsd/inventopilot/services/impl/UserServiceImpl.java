@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (foundUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
+            if (foundUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
                 return userDtoMapper.mapToDto(foundUser);
             } else {
                 throw new UnauthorizedAccessException("You do not have permission to view these user details");
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (!thisUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
+            if (!thisUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
                 throw new UnauthorizedAccessException("You do not have permission to update this user");
             }
 
@@ -95,6 +95,15 @@ public class UserServiceImpl implements UserService {
             }
             if (updatedUser.getPassword() != null) {
                 thisUser.setPassword(encoder.encode(updatedUser.getPassword()));
+            }
+
+            // If the user is an admin and a new role is provided, update the user role with the new data
+            if (!hasAdminAuthority(authUser)) {
+                if (updatedUser.getRole() != null) {
+                    thisUser.setUsername(updatedUser.getRole());
+                }
+            } else {
+                throw new UnauthorizedAccessException("You do not have permission to update this user's role");
             }
 
             User saveUser = userRepository.save(thisUser);
@@ -117,7 +126,7 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (thisUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
+            if (thisUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
                 userRepository.deleteById(username);
             } else {
                 throw new UnauthorizedAccessException("You do not have permission to delete this user");
