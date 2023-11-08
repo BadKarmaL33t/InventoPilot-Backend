@@ -3,6 +3,7 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
 import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.models.ProductType;
 import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class ProductController {
         List<ProductDto> productDtos;
         productDtos = productService.getAllProducts();
 
+        return ResponseEntity.ok().body(productDtos);
+    }
+
+    @GetMapping("/{type}")
+    public ResponseEntity<List<ProductDto>> getProductsByType(@PathVariable ProductType type) {
+        List<ProductDto> productDtos = productService.getProductsByType(type);
         return ResponseEntity.ok().body(productDtos);
     }
 

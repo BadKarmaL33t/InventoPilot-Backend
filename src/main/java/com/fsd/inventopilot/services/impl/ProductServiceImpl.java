@@ -5,6 +5,7 @@ import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductDtoMapper;
 import com.fsd.inventopilot.models.Product;
 import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.models.ProductType;
 import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.repositories.ProductRepository;
 import com.fsd.inventopilot.services.ProductService;
@@ -28,6 +29,14 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(productDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductDto> getProductsByType(ProductType type) {
+        List<Product> products = productRepository.findByType(type);
         return products.stream()
                 .map(productDtoMapper::mapToDto)
                 .collect(Collectors.toList());
