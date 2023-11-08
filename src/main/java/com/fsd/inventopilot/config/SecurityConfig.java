@@ -31,6 +31,9 @@ public class SecurityConfig {
                         .requestMatchers("/secure/admin/users", "/secure/admin/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/app/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
+                                "/app/users/**"
+                        ).authenticated()
+                        .requestMatchers(HttpMethod.GET,
                                 "/app/locations",
                                 "/app/locations/**",
                                 "/app/orders",

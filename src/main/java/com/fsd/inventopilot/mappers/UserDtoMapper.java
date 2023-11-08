@@ -20,6 +20,7 @@ public class UserDtoMapper {
         UserDto dto = new UserDto();
 
         BeanUtils.copyProperties(user, dto);
+        dto.setRole(String.valueOf(user.getRole()));
 
         return dto;
     }

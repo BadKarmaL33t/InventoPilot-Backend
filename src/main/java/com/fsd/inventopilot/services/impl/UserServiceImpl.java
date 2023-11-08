@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (foundUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
+            if (foundUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
                 return userDtoMapper.mapToDto(foundUser);
             } else {
                 throw new UnauthorizedAccessException("You do not have permission to view these user details");
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // If the user is an admin and a new role is provided, update the user role with the new data
-            if (!hasAdminAuthority(authUser)) {
+            if (hasAdminAuthority(authUser)) {
                 if (updatedUser.getRole() != null) {
                     thisUser.setUsername(updatedUser.getRole());
                 }
