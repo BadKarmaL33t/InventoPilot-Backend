@@ -131,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial) {
         Product existingProduct = productRepository.findByName(productName);
         if (existingProduct != null) {
-            existingProduct.setRawMaterial(rawMaterial);
+            existingProduct.setRaw(rawMaterial);
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
         }

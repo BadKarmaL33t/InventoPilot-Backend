@@ -15,6 +15,9 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String firstname;

@@ -16,8 +16,8 @@ INSERT INTO raw_materials (name, stock, status, used, batch_number, minimal_stoc
 VALUES ('Product-1-Raw', 1000, 1, 0, 'RMSN00001', 1000, 5000);
 
 INSERT INTO products (name, type, stock, status, sold, serial_number, minimal_stock, maximal_stock, raw_material_name)
-VALUES ('Product-1-S', 0, 1000, 1, 0, 'PSN00001', 1000, 5000, 'Product-1-Raw'),
-       ('Product-1-R', 1, 1000, 1, 0, 'PSN00001', 1000, 5000, 'Product-1-Raw');
+VALUES ('Product-1-S', 0, 1000, 1, 0, 'PSN00010', 1000, 5000, 'Product-1-Raw'),
+       ('Product-1-R', 1, 1000, 1, 0, 'PSN00011', 1000, 5000, 'Product-1-Raw');
 
 -- Establishing the relationship between Product-1-S and related components
 INSERT INTO product_components_products (product_components_id, products_id)

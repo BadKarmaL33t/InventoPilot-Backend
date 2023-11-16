@@ -14,23 +14,18 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private ProductType type;
-    @Column
     private int stock;
-    @Column
     private ProductStatus status;
-    @Column
     private int sold;
     @Column(nullable = false)
     private String serialNumber;
-    @Column
     private int minimalStock;
-    @Column
     private int maximalStock;
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
     private Set<Location> locations;
     @ManyToOne
-    @JoinColumn(name = "rawMaterial_name")
-    private RawMaterial rawMaterial;
+    @JoinColumn(name = "raw_material_name")
+    private RawMaterial raw;
     @ManyToMany(mappedBy = "products")
     private Set<ProductComponent> components;
 }

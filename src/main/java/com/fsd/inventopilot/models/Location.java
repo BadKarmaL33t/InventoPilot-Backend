@@ -21,7 +21,7 @@ public class Location {
     @JoinTable(name = "locations_raw_materials",
             joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "raw_materials_id"))
-    private Set<RawMaterial> rawMaterials;
+    private Set<RawMaterial> raws;
     @ManyToMany
     @JoinTable(name = "locations_products",
             joinColumns = @JoinColumn(name = "locations_id"),

@@ -144,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RecordNotFoundException("Manufacturing location not found"));
 
                 // Check if raw material stock will drop below zero
-                RawMaterial rawMaterial = product.getRawMaterial();
+                RawMaterial rawMaterial = product.getRaw();
                 int quantity = orderProduct.getQuantity();
                 if (rawMaterial.getStock() - quantity < 0) {
                     throw new RuntimeException("Raw material stock can't be less than zero");
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
 
                 // Subtract the raw material from stock
                 rawMaterial.setStock(rawMaterial.getStock() - quantity);
-                manufacturing.getRawMaterials().add(rawMaterial);
+                manufacturing.getRaws().add(rawMaterial);
 
                 for (ProductComponent productComponent : product.getComponents()) {
                     // Check if product component stock will drop below zero
@@ -180,10 +180,10 @@ public class OrderServiceImpl implements OrderService {
                         .findFirst()
                         .orElseThrow(() -> new RecordNotFoundException("Manufacturing location not found"));
 
-                RawMaterial rawMaterial = product.getRawMaterial();
+                RawMaterial rawMaterial = product.getRaw();
                 int quantity = orderProduct.getQuantity();
                 rawMaterial.setStock(rawMaterial.getStock() - quantity);
-                lab.getRawMaterials().add(rawMaterial);
+                lab.getRaws().add(rawMaterial);
 
                 for (ProductComponent productComponent : manufacturing.getComponents()) {
                     quantity = orderProduct.getQuantity();

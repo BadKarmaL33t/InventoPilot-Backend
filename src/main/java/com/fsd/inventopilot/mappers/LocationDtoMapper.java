@@ -32,7 +32,7 @@ public class LocationDtoMapper {
                     return mapper.mapToDto(product);
                 })
                 .collect(Collectors.toSet()));
-        dto.setRawMaterials(location.getRawMaterials().stream()
+        dto.setRawMaterials(location.getRaws().stream()
                 .map(rawMaterial -> {
                     RawMaterialDtoMapper mapper = getRawMaterialDtoMapper();
                     return mapper.mapToDto(rawMaterial);
@@ -58,7 +58,7 @@ public class LocationDtoMapper {
                     return mapper.mapToEntity(product);
                 })
                 .collect(Collectors.toSet()));
-        location.setRawMaterials(dto.getRawMaterials().stream()
+        location.setRaws(dto.getRawMaterials().stream()
                 .map(rawMaterial -> {
                     RawMaterialDtoMapper mapper = getRawMaterialDtoMapper();
                     return mapper.mapToEntity(rawMaterial);

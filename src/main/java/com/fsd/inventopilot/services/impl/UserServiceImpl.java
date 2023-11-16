@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         return userDtos;
     }
 
-    public UserDto getUserDtoByUsername(String username) {
+    public UserDto getUserDetailsByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
 
         if (user.isPresent()) {
@@ -106,6 +106,14 @@ public class UserServiceImpl implements UserService {
                 throw new UnauthorizedAccessException("You do not have permission to update this user's role");
             }
 
+// test
+//            try {
+//                User saveUser = userRepository.save(thisUser);
+//                return userDtoMapper.mapToDto(saveUser);
+//            } catch (Exception e) {
+//                e.printStackTrace(); // Log or print the exception details
+//                throw new RuntimeException("Failed to save user details", e);
+//            }
             User saveUser = userRepository.save(thisUser);
 
             return userDtoMapper.mapToDto(saveUser);

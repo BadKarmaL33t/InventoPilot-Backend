@@ -31,7 +31,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Transactional
-    public LocationDto getLocationDtoByDepartment(Department department) {
+    public LocationDto getLocationDetails(Department department) {
         Location location = locationRepository.findByDepartment(department);
         if (location != null) {
             return locationDtoMapper.mapToDto(location);

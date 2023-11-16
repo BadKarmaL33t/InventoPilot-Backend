@@ -14,11 +14,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "order")
-    @Column
     private Set<OrderProduct> orderProducts;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
-    @Column
+    private Date deliveryDate;
     private OrderStatus status;
 }

@@ -14,18 +14,14 @@ public class RawMaterial {
     private String name;
     @Column(nullable = false)
     private int stock;
-    @Column
     private ProductStatus status;
-    @Column
     private int used;
     @Column(nullable = false)
     private String batchNumber;
-    @Column(nullable = false)
     private int minimalStock;
-    @Column(nullable = false)
     private int maximalStock;
-    @ManyToMany(mappedBy = "rawMaterials")
+    @ManyToMany(mappedBy = "raws")
     private Set<Location> locations;
-    @OneToMany(mappedBy = "rawMaterial")
+    @OneToMany(mappedBy = "raw")
     private Set<Product> products;
 }

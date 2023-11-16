@@ -23,7 +23,7 @@ public class ProductDtoMapper {
         dto.setLocations(product.getLocations().stream()
                 .map(location -> getLocationDtoMapper().mapToDto(location))
                 .collect(Collectors.toSet()));
-        dto.setRawMaterial(getRawMaterialDtoMapper().mapToDto(product.getRawMaterial()));
+        dto.setRawMaterial(getRawMaterialDtoMapper().mapToDto(product.getRaw()));
         dto.setComponents(product.getComponents().stream()
                 .map(productComponent -> getProductComponentDtoMapper().mapToDto(productComponent))
                 .collect(Collectors.toSet()));
@@ -38,7 +38,7 @@ public class ProductDtoMapper {
         product.setLocations(dto.getLocations().stream()
                 .map(location -> getLocationDtoMapper().mapToEntity(location))
                 .collect(Collectors.toSet()));
-        product.setRawMaterial(getRawMaterialDtoMapper().mapToEntity(dto.getRawMaterial()));
+        product.setRaw(getRawMaterialDtoMapper().mapToEntity(dto.getRawMaterial()));
         product.setComponents(dto.getComponents().stream()
                 .map(productComponent -> getProductComponentDtoMapper().mapToEntity(productComponent))
                 .collect(Collectors.toSet()));

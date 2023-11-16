@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LocationService {
     List<LocationDto> getAllLocations();
-    LocationDto getLocationDtoByDepartment(Department department);
+    LocationDto getLocationDetails(Department department);
     LocationDto postLocation(LocationDto locationDto);
     LocationDto updateLocation(Department department, LocationDto newLocation);
     void deleteLocation(Department department);

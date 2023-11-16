@@ -53,7 +53,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 
         Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
         if (warehouse != null) {
-            warehouse.getRawMaterials().add(rawMaterial);
+            warehouse.getRaws().add(rawMaterial);
         } else {
             throw new RecordNotFoundException("Location warehouse could not be found");
         }

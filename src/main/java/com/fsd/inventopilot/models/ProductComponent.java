@@ -14,17 +14,13 @@ public class ProductComponent {
     private String name;
     @Column(nullable = false)
     private ComponentType type;
-    @Column
     private int stock;
     @Column(nullable = false)
     private ProductStatus status;
-    @Column
     private int used;
     @Column(nullable = false)
     private String serialNumber;
-    @Column
     private int minimalStock;
-    @Column
     private int maximalStock;
     @ManyToMany(mappedBy = "components")
     private Set<Location> locations;
