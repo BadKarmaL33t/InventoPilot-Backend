@@ -75,8 +75,8 @@ public class OrderServiceImpl implements OrderService {
         Order existingOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found: " + id));
 
-        if (updatedOrder.getStatus() != null) {
-            existingOrder.setStatus(updatedOrder.getStatus());
+        if (updatedOrder.getOrderStatus() != null) {
+            existingOrder.setOrderStatus(updatedOrder.getOrderStatus());
         }
 
         Order savedOrder = orderRepository.save(existingOrder);
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RecordNotFoundException("Order not found: " + orderId));
 
         if (newStatus == OrderStatus.AWAITING_MATERIAL) {
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         } else if (newStatus == OrderStatus.ADD_TO_STOCK) {
             for (OrderProduct orderProduct : order.getOrderProducts()) {
                 Product product = orderProduct.getProduct();
@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
                     warehouse.getProducts().add(product);
                 }
             }
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         } else if (newStatus == OrderStatus.PRODUCTION) {
             for (OrderProduct orderProduct : order.getOrderProducts()) {
                 Product product = orderProduct.getProduct();
@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
                     manufacturing.getComponents().add(productComponent);
                 }
             }
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         } else if (newStatus == OrderStatus.TESTING) {
             for (OrderProduct orderProduct : order.getOrderProducts()) {
                 Product product = orderProduct.getProduct();

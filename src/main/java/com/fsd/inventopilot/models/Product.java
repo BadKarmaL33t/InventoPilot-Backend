@@ -15,7 +15,7 @@ public class Product {
     @Column(nullable = false)
     private ProductType type;
     private int stock;
-    private ProductStatus status;
+    private ProductStatus productStatus;
     private int sold;
     @Column(nullable = false)
     private String serialNumber;

@@ -67,6 +67,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
             updatedComponent.setName(name);
             updatedComponent.setType(newComponent.getType());
             updatedComponent.setStock(newComponent.getStock());
+            updatedComponent.setProductStatus(newComponent.getProductStatus());
             updatedComponent.setSerialNumber(newComponent.getSerialNumber());
             updatedComponent.setMinimalStock(newComponent.getMinimalStock());
             updatedComponent.setMaximalStock(newComponent.getMaximalStock());
@@ -98,6 +99,9 @@ public class ProductComponentServiceImpl implements ProductComponentService {
             }
             if (updatedComponent.getStock() != 0) {
                 existingComponent.setStock(updatedComponent.getStock());
+            }
+            if (updatedComponent.getProductStatus() != null) {
+                existingComponent.setProductStatus(updatedComponent.getProductStatus());
             }
             if (updatedComponent.getSerialNumber() != null) {
                 existingComponent.setSerialNumber(updatedComponent.getSerialNumber());

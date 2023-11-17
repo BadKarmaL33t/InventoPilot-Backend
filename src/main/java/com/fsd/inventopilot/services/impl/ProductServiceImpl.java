@@ -74,6 +74,7 @@ public class ProductServiceImpl implements ProductService {
             updatedProduct.setName(name);
             updatedProduct.setType(newProduct.getType());
             updatedProduct.setStock(newProduct.getStock());
+            updatedProduct.setProductStatus(newProduct.getProductStatus());
             updatedProduct.setSold(newProduct.getSold());
             updatedProduct.setSerialNumber(newProduct.getSerialNumber());
             updatedProduct.setMinimalStock(newProduct.getMinimalStock());
@@ -107,6 +108,9 @@ public class ProductServiceImpl implements ProductService {
             }
             if (updatedProduct.getStock() != 0) {
                 existingProduct.setStock(updatedProduct.getStock());
+            }
+            if (updatedProduct.getProductStatus() != null) {
+                existingProduct.setProductStatus(updatedProduct.getProductStatus());
             }
             if (updatedProduct.getSold() != 0) {
                 existingProduct.setSold(updatedProduct.getSold());

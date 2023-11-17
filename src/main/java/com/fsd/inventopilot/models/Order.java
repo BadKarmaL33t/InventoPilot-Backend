@@ -19,5 +19,5 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
     private Date deliveryDate;
-    private OrderStatus status;
+    private OrderStatus orderStatus;
 }

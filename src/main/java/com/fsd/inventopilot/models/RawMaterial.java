@@ -14,7 +14,7 @@ public class RawMaterial {
     private String name;
     @Column(nullable = false)
     private int stock;
-    private ProductStatus status;
+    private ProductStatus productStatus;
     private int used;
     @Column(nullable = false)
     private String batchNumber;

@@ -20,7 +20,7 @@ public class ProductComponentDto {
     @Pattern(regexp = "[0-9]+")
     private int stock;
     @AllowedProductStatus
-    private ProductStatus status;
+    private ProductStatus productStatus;
     @Pattern(regexp = "[0-9]+")
     private int used;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")

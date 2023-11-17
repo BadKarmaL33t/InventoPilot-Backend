@@ -12,9 +12,7 @@ import com.fsd.inventopilot.services.RawMaterialService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,6 +67,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
             RawMaterial updatedRawMaterialEntity = rawMaterialDtoMapper.mapToEntity(newRawMaterial);
             updatedRawMaterialEntity.setName(name);
             updatedRawMaterialEntity.setStock(newRawMaterial.getStock());
+            updatedRawMaterialEntity.setProductStatus(newRawMaterial.getProductStatus());
             updatedRawMaterialEntity.setBatchNumber(newRawMaterial.getBatchNumber());
             updatedRawMaterialEntity.setMinimalStock(newRawMaterial.getMinimalStock());
             updatedRawMaterialEntity.setMaximalStock(newRawMaterial.getMaximalStock());
@@ -96,6 +95,9 @@ public class RawMaterialServiceImpl implements RawMaterialService {
         if (existingRawMaterial != null) {
             if (updatedRawMaterial.getStock() != 0) {
                 existingRawMaterial.setStock(updatedRawMaterial.getStock());
+            }
+            if (updatedRawMaterial.getProductStatus() != null) {
+                existingRawMaterial.setProductStatus(updatedRawMaterial.getProductStatus());
             }
             if (updatedRawMaterial.getBatchNumber() != null) {
                 existingRawMaterial.setBatchNumber(updatedRawMaterial.getBatchNumber());

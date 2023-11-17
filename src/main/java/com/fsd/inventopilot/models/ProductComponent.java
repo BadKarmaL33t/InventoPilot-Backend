@@ -16,7 +16,7 @@ public class ProductComponent {
     private ComponentType type;
     private int stock;
     @Column(nullable = false)
-    private ProductStatus status;
+    private ProductStatus productStatus;
     private int used;
     @Column(nullable = false)
     private String serialNumber;
