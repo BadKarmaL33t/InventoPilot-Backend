@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
             // Verify that the authenticated user is the author of the existing post
             if (thisUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
-                userRepository.deleteById(username);
+                userRepository.deleteById(thisUser.getId());
             } else {
                 throw new UnauthorizedAccessException("You do not have permission to delete this user");
             }
