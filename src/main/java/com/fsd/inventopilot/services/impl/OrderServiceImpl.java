@@ -207,7 +207,7 @@ public class OrderServiceImpl implements OrderService {
                     existingProduct.setStock(existingProduct.getStock() - quantity);
                 }
             }
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         } else if (newStatus == OrderStatus.SHIPPED) {
             for (OrderProduct orderProduct : order.getOrderProducts()) {
                 Product product = orderProduct.getProduct();
@@ -223,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
                         .findFirst().ifPresent(existingProduct -> existingProduct.setStock(existingProduct.getStock() - quantity));
 
             }
-            order.setStatus(newStatus);
+            order.setOrderStatus(newStatus);
         }
         orderRepository.save(order);
         return null;
