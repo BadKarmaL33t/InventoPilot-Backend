@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductDto> getProductsByType(ProductType type) {
-        List<Product> products = productRepository.findByType(type);
+        List<Product> products = productRepository.findByProductType(type);
         return products.stream()
                 .map(productDtoMapper::mapToDto)
                 .collect(Collectors.toList());
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
         if (existingProduct != null) {
             Product updatedProduct = productDtoMapper.mapToEntity(newProduct);
             updatedProduct.setName(name);
-            updatedProduct.setType(newProduct.getType());
+            updatedProduct.setProductType(newProduct.getProductType());
             updatedProduct.setStock(newProduct.getStock());
             updatedProduct.setProductStatus(newProduct.getProductStatus());
             updatedProduct.setSold(newProduct.getSold());
@@ -103,8 +103,8 @@ public class ProductServiceImpl implements ProductService {
             if (updatedProduct.getName() != null) {
                 existingProduct.setName(updatedProduct.getName());
             }
-            if (updatedProduct.getType() != null) {
-                existingProduct.setType(updatedProduct.getType());
+            if (updatedProduct.getProductType() != null) {
+                existingProduct.setProductType(updatedProduct.getProductType());
             }
             if (updatedProduct.getStock() != 0) {
                 existingProduct.setStock(updatedProduct.getStock());

@@ -65,7 +65,7 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         if (existingComponent != null) {
             ProductComponent updatedComponent = componentDtoMapper.mapToEntity(newComponent);
             updatedComponent.setName(name);
-            updatedComponent.setType(newComponent.getType());
+            updatedComponent.setComponentType(newComponent.getComponentType());
             updatedComponent.setStock(newComponent.getStock());
             updatedComponent.setProductStatus(newComponent.getProductStatus());
             updatedComponent.setSerialNumber(newComponent.getSerialNumber());
@@ -94,8 +94,8 @@ public class ProductComponentServiceImpl implements ProductComponentService {
             if (updatedComponent.getName() != null) {
                 existingComponent.setName(updatedComponent.getName());
             }
-            if (updatedComponent.getType() != null) {
-                existingComponent.setType(updatedComponent.getType());
+            if (updatedComponent.getComponentType() != null) {
+                existingComponent.setComponentType(updatedComponent.getComponentType());
             }
             if (updatedComponent.getStock() != 0) {
                 existingComponent.setStock(updatedComponent.getStock());

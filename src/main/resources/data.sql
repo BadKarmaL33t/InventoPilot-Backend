@@ -3,7 +3,7 @@ VALUES (0), -- warehouse
        (1), -- manufacturing
        (2); -- lab
 
-INSERT INTO product_components (name, type, stock, status, used, serial_number, minimal_stock, maximal_stock)
+INSERT INTO product_components (name, component_type, stock, product_status, used, serial_number, minimal_stock, maximal_stock)
 VALUES ('Solution-Liq', 0, 1000, 1, 0, 'PCSN00001', 1000, 5000),
        ('Bottle-10ml', 1, 1000, 1, 0, 'PCSN00002', 1000, 5000),
        ('Cap-10ml', 2, 1000, 1, 0, 'PCSN00003', 1000, 5000),
@@ -12,10 +12,10 @@ VALUES ('Solution-Liq', 0, 1000, 1, 0, 'PCSN00001', 1000, 5000),
        ('Printed-bag-product-1', 5, 1000, 1, 0, 'PCSN00061', 1000, 5000),
        ('Inner-bag', 6, 1000, 1, 0, 'PCSN00007', 1000, 5000);
 
-INSERT INTO raw_materials (name, stock, status, used, batch_number, minimal_stock, maximal_stock)
+INSERT INTO raw_materials (name, stock, product_status, used, batch_number, minimal_stock, maximal_stock)
 VALUES ('Product-1-Raw', 1000, 1, 0, 'RMSN00001', 1000, 5000);
 
-INSERT INTO products (name, type, stock, status, sold, serial_number, minimal_stock, maximal_stock, raw_material_name)
+INSERT INTO products (name, product_type, stock, product_status, sold, serial_number, minimal_stock, maximal_stock, raw_material_name)
 VALUES ('Product-1-S', 0, 1000, 1, 0, 'PSN00010', 1000, 5000, 'Product-1-Raw'),
        ('Product-1-R', 1, 1000, 1, 0, 'PSN00011', 1000, 5000, 'Product-1-Raw');
 

@@ -17,7 +17,7 @@ public class ProductDto {
     @Size(min = 2, max = 25)
     private String name;
     @AllowedProductType
-    private ProductType type;
+    private ProductType productType;
     @Pattern(regexp = "[0-9]+")
     private int stock;
     @AllowedProductStatus

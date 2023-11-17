@@ -16,7 +16,7 @@ public class ProductComponentDto {
     @Size(min = 2, max = 25)
     private String name;
     @AllowedComponentType
-    private ComponentType type;
+    private ComponentType componentType;
     @Pattern(regexp = "[0-9]+")
     private int stock;
     @AllowedProductStatus

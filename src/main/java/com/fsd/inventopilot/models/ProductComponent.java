@@ -13,7 +13,7 @@ public class ProductComponent {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
-    private ComponentType type;
+    private ComponentType componentType;
     private int stock;
     @Column(nullable = false)
     private ProductStatus productStatus;

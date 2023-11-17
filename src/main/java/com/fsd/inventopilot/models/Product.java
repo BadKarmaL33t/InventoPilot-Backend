@@ -13,7 +13,7 @@ public class Product {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
-    private ProductType type;
+    private ProductType productType;
     private int stock;
     private ProductStatus productStatus;
     private int sold;
