@@ -76,34 +76,35 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (!thisUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
-                throw new UnauthorizedAccessException("You do not have permission to update this user");
-            }
+            if (thisUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
 
-            // Update the user with the new data
-            if (updatedUser.getUsername() != null) {
-                thisUser.setUsername(updatedUser.getUsername());
-            }
-            if (updatedUser.getFirstname() != null) {
-                thisUser.setFirstname(updatedUser.getFirstname());
-            }
-            if (updatedUser.getLastname() != null) {
-                thisUser.setLastname(updatedUser.getLastname());
-            }
-            if (updatedUser.getEmail() != null) {
-                thisUser.setEmail(updatedUser.getEmail());
-            }
-            if (updatedUser.getPassword() != null) {
-                thisUser.setPassword(encoder.encode(updatedUser.getPassword()));
-            }
+                // Update the user with the new data
+                if (updatedUser.getUsername() != null) {
+                    thisUser.setUsername(updatedUser.getUsername());
+                }
+                if (updatedUser.getFirstname() != null) {
+                    thisUser.setFirstname(updatedUser.getFirstname());
+                }
+                if (updatedUser.getLastname() != null) {
+                    thisUser.setLastname(updatedUser.getLastname());
+                }
+                if (updatedUser.getEmail() != null) {
+                    thisUser.setEmail(updatedUser.getEmail());
+                }
+                if (updatedUser.getPassword() != null) {
+                    thisUser.setPassword(encoder.encode(updatedUser.getPassword()));
+                }
 
-            // If the user is an admin and a new role is provided, update the user role with the new data
-            if (hasAdminAuthority(authUser)) {
-                if (updatedUser.getRole() != null) {
-                    thisUser.setUsername(updatedUser.getRole());
+                // If the user is an admin and a new role is provided, update the user role with the new data
+                if (hasAdminAuthority(authUser)) {
+                    if (updatedUser.getRole() != null) {
+                        thisUser.setUsername(updatedUser.getRole());
+                    }
+                } else {
+                    throw new UnauthorizedAccessException("You do not have permission to update this user's role");
                 }
             } else {
-                throw new UnauthorizedAccessException("You do not have permission to update this user's role");
+                throw new UnauthorizedAccessException("You do not have permission to update this user");
             }
 
 // test
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
             org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
             // Verify that the authenticated user is the author of the existing post
-            if (thisUser.getUsername().equals(authUser.getUsername()) || !hasAdminAuthority(authUser)) {
+            if (thisUser.getUsername().equals(authUser.getUsername()) || hasAdminAuthority(authUser)) {
                 userRepository.deleteById(username);
             } else {
                 throw new UnauthorizedAccessException("You do not have permission to delete this user");
