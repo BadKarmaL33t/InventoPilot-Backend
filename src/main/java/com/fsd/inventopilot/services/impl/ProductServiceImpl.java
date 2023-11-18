@@ -131,8 +131,9 @@ public class ProductServiceImpl implements ProductService {
 
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + name + " not found");
         }
-        throw new RecordNotFoundException("Product: " + name + " not found");
     }
 
     @Transactional
@@ -145,9 +146,9 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setRaw(rawMaterial.get());
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
         }
-
-        throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
     }
 
     @Transactional
@@ -162,8 +163,8 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setComponents(productComponents);
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
         }
-
-        throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
     }
 }

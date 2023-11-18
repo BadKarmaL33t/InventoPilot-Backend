@@ -42,8 +42,9 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         if (productComponent.isPresent()) {
             ProductComponent existingComponent = productComponent.get();
             return componentDtoMapper.mapToDto(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
     @Transactional
@@ -88,8 +89,9 @@ public class ProductComponentServiceImpl implements ProductComponentService {
         if (component.isPresent()) {
             ProductComponent existingComponent = component.get();
             componentRepository.delete(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
     @Transactional
@@ -121,7 +123,8 @@ public class ProductComponentServiceImpl implements ProductComponentService {
 
             componentRepository.save(existingComponent);
             return componentDtoMapper.mapToDto(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 }
