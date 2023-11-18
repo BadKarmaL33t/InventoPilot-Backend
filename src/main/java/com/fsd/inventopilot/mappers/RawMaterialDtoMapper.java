@@ -42,7 +42,6 @@ public class RawMaterialDtoMapper {
 
         BeanUtils.copyProperties(dto, rawMaterial);
 
-        // Assuming that dto.getLocationNames() returns a Set<String> of location department names
         rawMaterial.setLocations(dto.getLocationNames().stream()
                 .map(department -> locationRepository.findByDepartment(department)
                         .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + department)))
