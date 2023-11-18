@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "rawMaterials")
 public class RawMaterial {
     @Id
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private int stock;

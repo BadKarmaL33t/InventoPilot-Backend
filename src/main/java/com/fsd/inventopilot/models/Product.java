@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "products")
 public class Product {
     @Id
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private ProductType productType;

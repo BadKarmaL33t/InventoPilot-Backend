@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "product_components")
 public class ProductComponent {
     @Id
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private ComponentType componentType;

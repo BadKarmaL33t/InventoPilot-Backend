@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "locations")
 public class Location {
     @Id
+    @Column(nullable = false, unique = true)
     private Department department;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "locations_product_components",
