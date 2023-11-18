@@ -52,16 +52,13 @@ public class LocationServiceImpl implements LocationService {
     // will be updated when location details are finalized
     @Transactional
     public LocationDto updateLocation(Department department, LocationDto newLocation) {
-        Optional<Location> existingLocation = locationRepository.findByDepartment(department);
-        if (existingLocation.isPresent()) {
-            Location foundLocation = existingLocation.get();
-
-            foundLocation.setDepartment(department);
-            locationRepository.save(foundLocation);
-            return locationDtoMapper.mapToDto(foundLocation);
-        } else {
-            throw new RecordNotFoundException("Location: " + department + " not found");
-        }
+        return locationRepository.findByDepartment(department)
+                .map(existingLocation -> {
+                    existingLocation.setDepartment(department);
+                    locationRepository.save(existingLocation);
+                    return locationDtoMapper.mapToDto(existingLocation);
+                })
+                .orElseThrow(() -> new RecordNotFoundException("Location: " + department + " not found"));
     }
 
     @Transactional

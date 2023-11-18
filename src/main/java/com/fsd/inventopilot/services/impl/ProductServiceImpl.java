@@ -45,8 +45,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     public ProductDto getProductDetails(String name) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             return productDtoMapper.mapToDto(existingProduct);
         }
         throw new RecordNotFoundException("Product: " + name + " not found");
@@ -71,29 +72,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto updateProduct(String name, ProductDto newProduct) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
-            Product updatedProduct = productDtoMapper.mapToEntity(newProduct);
-            updatedProduct.setName(name);
-            updatedProduct.setProductType(newProduct.getProductType());
-            updatedProduct.setStock(newProduct.getStock());
-            updatedProduct.setProductStatus(newProduct.getProductStatus());
-            updatedProduct.setSold(newProduct.getSold());
-            updatedProduct.setSerialNumber(newProduct.getSerialNumber());
-            updatedProduct.setMinimalStock(newProduct.getMinimalStock());
-            updatedProduct.setMaximalStock(newProduct.getMaximalStock());
-
-            productRepository.save(updatedProduct);
-            return productDtoMapper.mapToDto(updatedProduct);
-        }
-        throw new RecordNotFoundException("Product: " + name + " not found");
+        return productRepository.findByName(name)
+                .map(existingProduct -> {
+                    Product updatedProduct = productDtoMapper.mapToEntity(newProduct);
+                    updatedProduct.setName(name);
+                    productRepository.save(updatedProduct);
+                    return productDtoMapper.mapToDto(updatedProduct);
+                })
+                .orElseThrow(() -> new RecordNotFoundException("Product: " + name + " not found"));
     }
 
     @Transactional
     public void deleteProduct(String name) {
-        Product product = productRepository.findByName(name);
-        if (product != null) {
-            productRepository.delete(product);
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product foundProduct = product.get();
+            productRepository.delete(foundProduct);
         } else {
             throw new RecordNotFoundException("Product: " + name + " not found");
         }
@@ -101,8 +95,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto updateProductDetails(String name, ProductDto updatedProduct) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             if (updatedProduct.getName() != null) {
                 existingProduct.setName(updatedProduct.getName());
             }
@@ -136,8 +131,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial) {
-        Product existingProduct = productRepository.findByName(productName);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(productName);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             existingProduct.setRaw(rawMaterial);
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
@@ -147,8 +143,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto addProductComponentToProduct(String productName, ProductComponent productComponent) {
-        Product existingProduct = productRepository.findByName(productName);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(productName);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             Set<ProductComponent> productComponents = existingProduct.getComponents();
             productComponents.add(productComponent);
             existingProduct.setComponents(productComponents);
