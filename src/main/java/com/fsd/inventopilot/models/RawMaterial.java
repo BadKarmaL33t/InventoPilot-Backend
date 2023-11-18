@@ -10,7 +10,6 @@ import java.util.Set;
 @Table(name = "rawMaterials")
 public class RawMaterial {
     @Id
-    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private int stock;
@@ -20,8 +19,8 @@ public class RawMaterial {
     private String batchNumber;
     private int minimalStock;
     private int maximalStock;
-    @ManyToMany(mappedBy = "raws")
+    @ManyToMany(mappedBy = "raws", cascade = CascadeType.ALL)
     private Set<Location> locations;
-    @OneToMany(mappedBy = "raw")
+    @OneToMany(mappedBy = "raw", cascade = CascadeType.ALL)
     private Set<Product> products;
 }

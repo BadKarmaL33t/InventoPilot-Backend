@@ -10,7 +10,6 @@ import java.util.Set;
 @Table(name = "product_components")
 public class ProductComponent {
     @Id
-    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private ComponentType componentType;
@@ -22,9 +21,9 @@ public class ProductComponent {
     private String serialNumber;
     private int minimalStock;
     private int maximalStock;
-    @ManyToMany(mappedBy = "components")
+    @ManyToMany(mappedBy = "components", cascade = CascadeType.ALL)
     private Set<Location> locations;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "product_components_products",
             joinColumns = @JoinColumn(name = "product_components_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))

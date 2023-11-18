@@ -19,29 +19,29 @@ INSERT INTO products (name, product_type, stock, product_status, sold, serial_nu
 VALUES ('Product-1-S', 0, 1000, 1, 0, 'PSN00010', 1000, 5000, 'Product-1-Raw'),
        ('Product-1-R', 1, 1000, 1, 0, 'PSN00011', 1000, 5000, 'Product-1-Raw');
 
--- Establishing the relationship between Product-1-S and related components
-INSERT INTO product_components_products (product_components_id, products_id)
-VALUES ('Solution-Liq', 'Product-1-S'),
-       ('Bottle-10ml', 'Product-1-S'),
-       ('Cap-10ml', 'Product-1-S'),
-       ('Induction-liner-10ml', 'Product-1-S'),
-       ('Label-product-1', 'Product-1-S'),
-       ('Printed-bag-product-1', 'Product-1-R'),
-       ('Inner-bag', 'Product-1-R');
-
--- Establishing relationships with Location WAREHOUSE
-INSERT INTO locations_product_components (locations_id, product_components_id)
-VALUES (0, 'Solution-Liq'),
-       (0, 'Bottle-10ml'),
-       (0, 'Cap-10ml'),
-       (0, 'Induction-liner-10ml'),
-       (0, 'Label-product-1'),
-       (0, 'Printed-bag-product-1'),
-       (0, 'Inner-bag');
-
-INSERT INTO locations_products (locations_id, products_id)
-VALUES (0, 'Product-1-S'),
-       (0, 'Product-1-R');
-
-INSERT INTO locations_raw_materials (locations_id, raw_materials_id)
-VALUES (0, 'Product-1-Raw');
+-- -- Establishing the relationship between Product-1-S and related components
+-- INSERT INTO product_components_products (product_components_id, products_id)
+-- VALUES ('Solution-Liq', 'Product-1-S'),
+--        ('Bottle-10ml', 'Product-1-S'),
+--        ('Cap-10ml', 'Product-1-S'),
+--        ('Induction-liner-10ml', 'Product-1-S'),
+--        ('Label-product-1', 'Product-1-S'),
+--        ('Printed-bag-product-1', 'Product-1-R'),
+--        ('Inner-bag', 'Product-1-R');
+--
+-- -- Establishing relationships with Location WAREHOUSE
+-- INSERT INTO locations_product_components (locations_id, product_components_id)
+-- VALUES (0, 'Solution-Liq'),
+--        (0, 'Bottle-10ml'),
+--        (0, 'Cap-10ml'),
+--        (0, 'Induction-liner-10ml'),
+--        (0, 'Label-product-1'),
+--        (0, 'Printed-bag-product-1'),
+--        (0, 'Inner-bag');
+--
+-- INSERT INTO locations_products (locations_id, products_id)
+-- VALUES (0, 'Product-1-S'),
+--        (0, 'Product-1-R');
+--
+-- INSERT INTO locations_raw_materials (locations_id, raw_materials_id)
+-- VALUES (0, 'Product-1-Raw');

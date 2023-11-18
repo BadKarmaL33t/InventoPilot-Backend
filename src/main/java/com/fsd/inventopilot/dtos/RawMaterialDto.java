@@ -3,6 +3,7 @@ package com.fsd.inventopilot.dtos;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -11,6 +12,8 @@ import java.util.Set;
 
 @Data
 public class RawMaterialDto {
+    @NotNull
+    private Long id;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     @Size(min = 2, max = 25)
     private String name;

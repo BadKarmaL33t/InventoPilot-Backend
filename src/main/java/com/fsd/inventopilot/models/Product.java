@@ -10,7 +10,6 @@ import java.util.Set;
 @Table(name = "products")
 public class Product {
     @Id
-    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private ProductType productType;
@@ -23,9 +22,9 @@ public class Product {
     private int maximalStock;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
     private Set<Location> locations;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "raw_material_name")
     private RawMaterial raw;
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", cascade = CascadeType.ALL)
     private Set<ProductComponent> components;
 }

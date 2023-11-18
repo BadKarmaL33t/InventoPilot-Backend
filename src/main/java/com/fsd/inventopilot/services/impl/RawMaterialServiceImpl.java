@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,34 +36,35 @@ public class RawMaterialServiceImpl implements RawMaterialService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public RawMaterialDto getRawMaterialDetails(String name) {
-        RawMaterial existingRawMaterial = rawMaterialRepository.findByName(name);
-        if (existingRawMaterial != null) {
-            return rawMaterialDtoMapper.mapToDto(existingRawMaterial);
-        } else {
-            throw new RecordNotFoundException("RawMaterial: " + name + " not found");
-        }
+        Optional<RawMaterial> existingRawMaterialOptional = rawMaterialRepository.findByName(name);
+        RawMaterial existingRawMaterial = existingRawMaterialOptional.orElseThrow(() ->
+                new RecordNotFoundException("RawMaterial: " + name + " not found")
+        );
+        return rawMaterialDtoMapper.mapToDto(existingRawMaterial);
     }
 
     @Transactional
     public RawMaterialDto postRawMaterial(RawMaterialDto rawMaterialDto) {
         RawMaterial rawMaterial = rawMaterialDtoMapper.mapToEntity(rawMaterialDto);
 
-        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
-        if (warehouse != null) {
-            warehouse.getRaws().add(rawMaterial);
-        } else {
-            throw new RecordNotFoundException("Location warehouse could not be found");
-        }
+        Optional<Location> warehouseOptional = Optional.ofNullable(locationRepository.findByDepartment(Department.WAREHOUSE));
+        Location warehouse = warehouseOptional.orElseThrow(() ->
+                new RecordNotFoundException("Location warehouse could not be found")
+        );
 
+        warehouse.getRaws().add(rawMaterial);
         rawMaterialRepository.save(rawMaterial);
         return rawMaterialDtoMapper.mapToDto(rawMaterial);
     }
 
     @Transactional
     public RawMaterialDto updateRawMaterial(String name, RawMaterialDto newRawMaterial) {
-        RawMaterial existingRawMaterial = rawMaterialRepository.findByName(name);
+        Optional<RawMaterial> existingRawMaterialOptional = rawMaterialRepository.findByName(name);
+        RawMaterial existingRawMaterial = existingRawMaterialOptional.orElseThrow(() ->
+                new RecordNotFoundException("RawMaterial: " + name + " not found")
+        );
         if (existingRawMaterial != null) {
             RawMaterial updatedRawMaterialEntity = rawMaterialDtoMapper.mapToEntity(newRawMaterial);
             updatedRawMaterialEntity.setName(name);
@@ -81,8 +83,9 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 
     @Transactional
     public void deleteRawMaterial(String name) {
-        RawMaterial rawMaterial = rawMaterialRepository.findByName(name);
-        if (rawMaterial != null) {
+        Optional<RawMaterial> rawMaterialOptional = rawMaterialRepository.findByName(name);
+        if (rawMaterialOptional.isPresent()) {
+            RawMaterial rawMaterial = rawMaterialOptional.get();
             rawMaterialRepository.delete(rawMaterial);
         } else {
             throw new RecordNotFoundException("RawMaterial: " + name + " not found");
@@ -91,7 +94,10 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 
     @Transactional
     public RawMaterialDto updateRawMaterialDetails(String name, RawMaterialDto updatedRawMaterial) {
-        RawMaterial existingRawMaterial = rawMaterialRepository.findByName(name);
+        Optional<RawMaterial> existingRawMaterialOptional = rawMaterialRepository.findByName(name);
+        RawMaterial existingRawMaterial = existingRawMaterialOptional.orElseThrow(() ->
+                new RecordNotFoundException("RawMaterial: " + name + " not found")
+        );
         if (existingRawMaterial != null) {
             if (updatedRawMaterial.getStock() != 0) {
                 existingRawMaterial.setStock(updatedRawMaterial.getStock());
