@@ -28,12 +28,6 @@ public class ProductController {
         return ResponseEntity.ok().body(productDtos);
     }
 
-    @GetMapping("/{type}")
-    public ResponseEntity<List<ProductDto>> getProductsByType(@PathVariable ProductType type) {
-        List<ProductDto> productDtos = productService.getProductsByType(type);
-        return ResponseEntity.ok().body(productDtos);
-    }
-
     @GetMapping("/{name}")
     public ResponseEntity<ProductDto> getProductDetails(@PathVariable("name") String name) {
         ProductDto dto = productService.getProductDetails(name);

@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDto> getAllProducts();
-    List<ProductDto> getProductsByType(ProductType type);
     ProductDto getProductDetails(String name);
     ProductDto postProduct(ProductDto componentDto);
     ProductDto updateProduct(String name, ProductDto newProduct);

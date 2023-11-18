@@ -42,14 +42,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getProductsByType(ProductType type) {
-        List<Product> products = productRepository.findByProductType(type);
-        return products.stream()
-                .map(productDtoMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public ProductDto getProductDetails(String name) {
         Optional<Product> product = productRepository.findByName(name);
         if (product.isPresent()) {
