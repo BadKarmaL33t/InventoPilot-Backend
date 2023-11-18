@@ -1,5 +1,6 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.models.ProductType;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
@@ -31,9 +32,9 @@ public class ProductDto {
     @Pattern(regexp = "[0-9]+")
     private int maximalStock;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<LocationDto> locations;
+    private Set<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private RawMaterialDto rawMaterial;
+    private String rawMaterialName;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductComponentDto> components;
+    private Set<String> componentNames;
 }

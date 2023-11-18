@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,9 +56,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto postProduct(ProductDto productDto) {
         Product product = productDtoMapper.mapToEntity(productDto);
 
-        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
-        if (warehouse != null) {
-            warehouse.getProducts().add(product);
+        Optional<Location> warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse.isPresent()) {
+            Location location = warehouse.get();
+            location.getProducts().add(product);
+            locationRepository.save(location);
         } else {
             throw new RecordNotFoundException("Location warehouse could not be found");
         }

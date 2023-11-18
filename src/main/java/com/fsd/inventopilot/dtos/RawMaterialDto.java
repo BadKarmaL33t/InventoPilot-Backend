@@ -1,5 +1,6 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
 import jakarta.persistence.Column;
@@ -30,7 +31,7 @@ public class RawMaterialDto {
     @Pattern(regexp = "[0-9]+")
     private int maximalStock;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<LocationDto> locations;
+    private Set<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductDto> products;
+    private Set<String> productNames;
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,9 +49,11 @@ public class ProductComponentServiceImpl implements ProductComponentService {
     public ProductComponentDto postComponent(ProductComponentDto componentDto) {
         ProductComponent component = componentDtoMapper.mapToEntity(componentDto);
 
-        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
-        if (warehouse != null) {
-            warehouse.getComponents().add(component);
+        Optional<Location> warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse.isPresent()) {
+            Location location = warehouse.get();
+            location.getComponents().add(component);
+            locationRepository.save(location);
         } else {
             throw new RecordNotFoundException("Location warehouse could not be found");
         }

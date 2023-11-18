@@ -23,9 +23,9 @@ public class Product {
     private int maximalStock;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
     private Set<Location> locations;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "raw_material_name")
     private RawMaterial raw;
-    @ManyToMany(mappedBy = "products", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products", cascade = CascadeType.ALL)
     private Set<ProductComponent> components;
 }
