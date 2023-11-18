@@ -80,9 +80,9 @@ public class ProductController {
     @PostMapping("/{name}/raw")
     public ResponseEntity<ProductDto> addRawMaterialToProduct(
             @PathVariable("name") String productName,
-            @RequestBody RawMaterial rawMaterial) {
+            @RequestBody String rawMaterialName) {
 
-        ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterial);
+        ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterialName);
 
         return ResponseEntity.ok().body(dto);
     }
@@ -90,9 +90,9 @@ public class ProductController {
     @PostMapping("/{name}/components")
     public ResponseEntity<ProductDto> addProductComponentToProduct(
             @PathVariable("name") String productName,
-            @RequestBody ProductComponent productComponent) {
+            @RequestBody String productComponentName) {
 
-        ProductDto dto = productService.addProductComponentToProduct(productName, productComponent);
+        ProductDto dto = productService.addProductComponentToProduct(productName, productComponentName);
 
         return ResponseEntity.ok().body(dto);
     }

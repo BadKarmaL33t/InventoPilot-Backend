@@ -15,6 +15,6 @@ public interface ProductService {
     ProductDto updateProduct(String name, ProductDto newProduct);
     void deleteProduct(String name);
     ProductDto updateProductDetails(String name, ProductDto updatedProduct);
-    ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial);
-    ProductDto addProductComponentToProduct(String productName, ProductComponent productComponent);
+    ProductDto addRawMaterialToProduct(String productName, String rawMaterialName);
+    ProductDto addProductComponentToProduct(String productName, String productComponentName);
 }

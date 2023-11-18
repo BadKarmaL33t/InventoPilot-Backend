@@ -5,7 +5,9 @@ import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductDtoMapper;
 import com.fsd.inventopilot.models.*;
 import com.fsd.inventopilot.repositories.LocationRepository;
+import com.fsd.inventopilot.repositories.ProductComponentRepository;
 import com.fsd.inventopilot.repositories.ProductRepository;
+import com.fsd.inventopilot.repositories.RawMaterialRepository;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductDtoMapper productDtoMapper;
     private final LocationRepository locationRepository;
+    private final RawMaterialRepository rawMaterialRepository;
+    private final ProductComponentRepository productComponentRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository, RawMaterialServiceImpl rawMaterialService, ProductComponentServiceImpl productComponentService, RawMaterialRepository rawMaterialRepository, ProductComponentRepository productComponentRepository) {
         this.productRepository = productRepository;
         this.productDtoMapper = productDtoMapper;
         this.locationRepository = locationRepository;
+        this.rawMaterialRepository = rawMaterialRepository;
+        this.productComponentRepository = productComponentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -130,28 +136,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial) {
+    public ProductDto addRawMaterialToProduct(String productName, String rawMaterialName) {
         Optional<Product> product = productRepository.findByName(productName);
-        if (product.isPresent()) {
+        Optional<RawMaterial> rawMaterial = rawMaterialRepository.findByName(rawMaterialName);
+
+        if (product.isPresent() && rawMaterial.isPresent()) {
             Product existingProduct = product.get();
-            existingProduct.setRaw(rawMaterial);
+            existingProduct.setRaw(rawMaterial.get());
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
         }
-        throw new RecordNotFoundException("Product: " + productName + " not found");
+
+        throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
     }
 
     @Transactional
-    public ProductDto addProductComponentToProduct(String productName, ProductComponent productComponent) {
+    public ProductDto addProductComponentToProduct(String productName, String productComponentName) {
         Optional<Product> product = productRepository.findByName(productName);
-        if (product.isPresent()) {
+        Optional<ProductComponent> productComponent = productComponentRepository.findByName(productComponentName);
+
+        if (product.isPresent() && productComponent.isPresent()) {
             Product existingProduct = product.get();
             Set<ProductComponent> productComponents = existingProduct.getComponents();
-            productComponents.add(productComponent);
+            productComponents.add(productComponent.get());
             existingProduct.setComponents(productComponents);
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
         }
-        throw new RecordNotFoundException("Product: " + productName + " not found");
+
+        throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
     }
 }
