@@ -1,42 +1,46 @@
 package com.fsd.inventopilot.mappers;
 
 import com.fsd.inventopilot.dtos.LocationDto;
+import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.models.Location;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
+import com.fsd.inventopilot.models.Product;
+import com.fsd.inventopilot.models.ProductComponent;
+import com.fsd.inventopilot.models.RawMaterial;
+import com.fsd.inventopilot.repositories.ProductComponentRepository;
+import com.fsd.inventopilot.repositories.ProductRepository;
+import com.fsd.inventopilot.repositories.RawMaterialRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class LocationDtoMapper {
-    private final ApplicationContext applicationContext;
+    private final ProductComponentRepository productComponentRepository;
+    private final ProductRepository productRepository;
+    private final RawMaterialRepository rawMaterialRepository;
 
-    public LocationDtoMapper(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public LocationDtoMapper(
+            ProductComponentRepository productComponentRepository,
+            ProductRepository productRepository,
+            RawMaterialRepository rawMaterialRepository) {
+        this.productComponentRepository = productComponentRepository;
+        this.productRepository = productRepository;
+        this.rawMaterialRepository = rawMaterialRepository;
     }
 
     public LocationDto mapToDto(Location location) {
         LocationDto dto = new LocationDto();
 
         BeanUtils.copyProperties(location, dto);
-        dto.setComposites(location.getComponents().stream()
-                .map(component -> {
-                    ProductComponentDtoMapper mapper = getProductComponentDtoMapper();
-                    return mapper.mapToDto(component);
-                })
+        dto.setCompositeNames(location.getComponents().stream()
+                .map(ProductComponent::getName)
                 .collect(Collectors.toSet()));
-        dto.setProducts(location.getProducts().stream()
-                .map(product -> {
-                    ProductDtoMapper mapper = getProductDtoMapper();
-                    return mapper.mapToDto(product);
-                })
+        dto.setProductNames(location.getProducts().stream()
+                .map(Product::getName)
                 .collect(Collectors.toSet()));
-        dto.setRawMaterials(location.getRaws().stream()
-                .map(rawMaterial -> {
-                    RawMaterialDtoMapper mapper = getRawMaterialDtoMapper();
-                    return mapper.mapToDto(rawMaterial);
-                })
+        dto.setRawMaterialNames(location.getRaws().stream()
+                .map(RawMaterial::getName)
                 .collect(Collectors.toSet()));
 
         return dto;
@@ -46,38 +50,19 @@ public class LocationDtoMapper {
         Location location = new Location();
 
         BeanUtils.copyProperties(dto, location);
-        location.setComponents(dto.getComposites().stream()
-                .map(component -> {
-                    ProductComponentDtoMapper mapper = getProductComponentDtoMapper();
-                    return mapper.mapToEntity(component);
-                })
+        location.setComponents(dto.getCompositeNames().stream()
+                .map(name -> productComponentRepository.findByName(name)
+                        .orElseThrow(() -> new RecordNotFoundException("ProductComponent not found with name: " + name)))
                 .collect(Collectors.toSet()));
-        location.setProducts(dto.getProducts().stream()
-                .map(product -> {
-                    ProductDtoMapper mapper = getProductDtoMapper();
-                    return mapper.mapToEntity(product);
-                })
+        location.setProducts(dto.getProductNames().stream()
+                .map(name -> productRepository.findByName(name)
+                        .orElseThrow(() -> new RecordNotFoundException("Product not found with name: " + name)))
                 .collect(Collectors.toSet()));
-        location.setRaws(dto.getRawMaterials().stream()
-                .map(rawMaterial -> {
-                    RawMaterialDtoMapper mapper = getRawMaterialDtoMapper();
-                    return mapper.mapToEntity(rawMaterial);
-                })
+        location.setRaws(dto.getRawMaterialNames().stream()
+                .map(name -> rawMaterialRepository.findByName(name)
+                        .orElseThrow(() -> new RecordNotFoundException("RawMaterial not found with name: " + name)))
                 .collect(Collectors.toSet()));
 
         return location;
-    }
-
-    // Lazily initialize the mappers to prevent circular dependencies
-    private ProductComponentDtoMapper getProductComponentDtoMapper() {
-        return applicationContext.getBean(ProductComponentDtoMapper.class);
-    }
-
-    private RawMaterialDtoMapper getRawMaterialDtoMapper() {
-        return applicationContext.getBean(RawMaterialDtoMapper.class);
-    }
-
-    private ProductDtoMapper getProductDtoMapper() {
-        return applicationContext.getBean(ProductDtoMapper.class);
     }
 }

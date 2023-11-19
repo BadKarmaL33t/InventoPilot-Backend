@@ -1,5 +1,6 @@
 package com.fsd.inventopilot.dtos;
 
+import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
 import jakarta.persistence.Column;
@@ -8,12 +9,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 public class RawMaterialDto {
-    @NotNull
-    private Long id;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     @Size(min = 2, max = 25)
     private String name;
@@ -30,7 +29,7 @@ public class RawMaterialDto {
     @Pattern(regexp = "[0-9]+")
     private int maximalStock;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<LocationDto> locations;
+    private Collection<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductDto> products;
+    private Collection<String> productNames;
 }

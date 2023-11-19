@@ -3,8 +3,8 @@ package com.fsd.inventopilot.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @Entity
@@ -13,8 +13,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "order")
-    private Set<OrderProduct> orderProducts;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
+    private Collection<OrderProduct> orderProducts;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;

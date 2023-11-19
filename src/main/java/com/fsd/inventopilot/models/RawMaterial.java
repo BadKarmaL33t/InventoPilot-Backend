@@ -3,7 +3,7 @@ package com.fsd.inventopilot.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class RawMaterial {
     private int minimalStock;
     private int maximalStock;
     @ManyToMany(mappedBy = "raws", cascade = CascadeType.ALL)
-    private Set<Location> locations;
+    private Collection<Location> locations;
     @OneToMany(mappedBy = "raw", cascade = CascadeType.ALL)
-    private Set<Product> products;
+    private Collection<Product> products;
 }

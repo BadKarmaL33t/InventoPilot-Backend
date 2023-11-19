@@ -5,13 +5,16 @@ import com.fsd.inventopilot.exceptions.RecordNotFoundException;
 import com.fsd.inventopilot.mappers.ProductDtoMapper;
 import com.fsd.inventopilot.models.*;
 import com.fsd.inventopilot.repositories.LocationRepository;
+import com.fsd.inventopilot.repositories.ProductComponentRepository;
 import com.fsd.inventopilot.repositories.ProductRepository;
+import com.fsd.inventopilot.repositories.RawMaterialRepository;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,11 +22,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductDtoMapper productDtoMapper;
     private final LocationRepository locationRepository;
+    private final RawMaterialRepository rawMaterialRepository;
+    private final ProductComponentRepository productComponentRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository, RawMaterialRepository rawMaterialRepository, ProductComponentRepository productComponentRepository) {
         this.productRepository = productRepository;
         this.productDtoMapper = productDtoMapper;
         this.locationRepository = locationRepository;
+        this.rawMaterialRepository = rawMaterialRepository;
+        this.productComponentRepository = productComponentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -35,17 +42,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getProductsByType(ProductType type) {
-        List<Product> products = productRepository.findByProductType(type);
-        return products.stream()
-                .map(productDtoMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public ProductDto getProductDetails(String name) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             return productDtoMapper.mapToDto(existingProduct);
         }
         throw new RecordNotFoundException("Product: " + name + " not found");
@@ -55,9 +55,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto postProduct(ProductDto productDto) {
         Product product = productDtoMapper.mapToEntity(productDto);
 
-        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
-        if (warehouse != null) {
-            warehouse.getProducts().add(product);
+        Optional<Location> warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse.isPresent()) {
+            Location location = warehouse.get();
+            location.getProducts().add(product);
+            locationRepository.save(location);
         } else {
             throw new RecordNotFoundException("Location warehouse could not be found");
         }
@@ -68,29 +70,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto updateProduct(String name, ProductDto newProduct) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
-            Product updatedProduct = productDtoMapper.mapToEntity(newProduct);
-            updatedProduct.setName(name);
-            updatedProduct.setProductType(newProduct.getProductType());
-            updatedProduct.setStock(newProduct.getStock());
-            updatedProduct.setProductStatus(newProduct.getProductStatus());
-            updatedProduct.setSold(newProduct.getSold());
-            updatedProduct.setSerialNumber(newProduct.getSerialNumber());
-            updatedProduct.setMinimalStock(newProduct.getMinimalStock());
-            updatedProduct.setMaximalStock(newProduct.getMaximalStock());
-
-            productRepository.save(updatedProduct);
-            return productDtoMapper.mapToDto(updatedProduct);
-        }
-        throw new RecordNotFoundException("Product: " + name + " not found");
+        return productRepository.findByName(name)
+                .map(existingProduct -> {
+                    Product updatedProduct = productDtoMapper.mapToEntity(newProduct);
+                    updatedProduct.setName(name);
+                    productRepository.save(updatedProduct);
+                    return productDtoMapper.mapToDto(updatedProduct);
+                })
+                .orElseThrow(() -> new RecordNotFoundException("Product: " + name + " not found"));
     }
 
     @Transactional
     public void deleteProduct(String name) {
-        Product product = productRepository.findByName(name);
-        if (product != null) {
-            productRepository.delete(product);
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product foundProduct = product.get();
+            productRepository.delete(foundProduct);
         } else {
             throw new RecordNotFoundException("Product: " + name + " not found");
         }
@@ -98,8 +93,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public ProductDto updateProductDetails(String name, ProductDto updatedProduct) {
-        Product existingProduct = productRepository.findByName(name);
-        if (existingProduct != null) {
+        Optional<Product> product = productRepository.findByName(name);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
             if (updatedProduct.getName() != null) {
                 existingProduct.setName(updatedProduct.getName());
             }
@@ -127,31 +123,116 @@ public class ProductServiceImpl implements ProductService {
 
             productRepository.save(existingProduct);
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + name + " not found");
         }
-        throw new RecordNotFoundException("Product: " + name + " not found");
     }
 
     @Transactional
-    public ProductDto addRawMaterialToProduct(String productName, RawMaterial rawMaterial) {
-        Product existingProduct = productRepository.findByName(productName);
-        if (existingProduct != null) {
-            existingProduct.setRaw(rawMaterial);
+    public ProductDto addRawMaterialToProduct(String productName, String rawMaterialName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<RawMaterial> rawMaterial = rawMaterialRepository.findByName(rawMaterialName);
+
+        if (product.isPresent() && rawMaterial.isPresent()) {
+            Product existingProduct = product.get();
+            RawMaterial existingRawMaterial = rawMaterial.get();
+
+            // Update the product's raw material
+            existingProduct.setRaw(rawMaterial.get());
+
+            // Update the raw material's products
+            Collection<Product> products = existingRawMaterial.getProducts();
+            products.add(existingProduct);
+            existingRawMaterial.setProducts(products);
+
             productRepository.save(existingProduct);
+            rawMaterialRepository.save(rawMaterial.get());
+
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
         }
-        throw new RecordNotFoundException("Product: " + productName + " not found");
     }
 
     @Transactional
-    public ProductDto addProductComponentToProduct(String productName, ProductComponent productComponent) {
-        Product existingProduct = productRepository.findByName(productName);
-        if (existingProduct != null) {
-            Set<ProductComponent> productComponents = existingProduct.getComponents();
-            productComponents.add(productComponent);
+    public ProductDto removeRawMaterialFromProduct(String productName, String rawMaterialName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<RawMaterial> rawMaterial = rawMaterialRepository.findByName(rawMaterialName);
+
+        if (product.isPresent() && rawMaterial.isPresent()) {
+            Product existingProduct = product.get();
+            RawMaterial existingRawMaterial = rawMaterial.get();
+
+            // Remove the raw material from the product
+            existingProduct.setRaw(null);
+
+            // Remove the product from the raw material's products
+            Collection<Product> products = existingRawMaterial.getProducts();
+            products.remove(existingProduct);
+            existingRawMaterial.setProducts(products);
+
+            productRepository.save(existingProduct);
+            rawMaterialRepository.save(existingRawMaterial);
+
+            return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
+        }
+    }
+
+    @Transactional
+    public ProductDto addProductComponentToProduct(String productName, String productComponentName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<ProductComponent> productComponent = productComponentRepository.findByName(productComponentName);
+
+        if (product.isPresent() && productComponent.isPresent()) {
+            Product existingProduct = product.get();
+            ProductComponent existingProductComponent = productComponent.get();
+
+            // Update the product's components
+            Collection<ProductComponent> productComponents = existingProduct.getComponents();
+            productComponents.add(productComponent.get());
             existingProduct.setComponents(productComponents);
+
+            // Update the productComponent's products
+            Collection<Product> products = existingProductComponent.getProducts();
+            products.add(existingProduct);
+            existingProductComponent.setProducts(products);
+
             productRepository.save(existingProduct);
+            productComponentRepository.save(productComponent.get());
+
             return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
         }
-        throw new RecordNotFoundException("Product: " + productName + " not found");
+    }
+
+    @Transactional
+    public ProductDto removeProductComponentFromProduct(String productName, String productComponentName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<ProductComponent> productComponent = productComponentRepository.findByName(productComponentName);
+
+        if (product.isPresent() && productComponent.isPresent()) {
+            Product existingProduct = product.get();
+            ProductComponent existingProductComponent = productComponent.get();
+
+            // Remove the productComponent from the product's components
+            Collection<ProductComponent> productComponents = existingProduct.getComponents();
+            productComponents.remove(existingProductComponent);
+            existingProduct.setComponents(productComponents);
+
+            // Remove the product from the productComponent's products
+            Collection<Product> products = existingProductComponent.getProducts();
+            products.remove(existingProduct);
+            existingProductComponent.setProducts(products);
+
+            productRepository.save(existingProduct);
+            productComponentRepository.save(existingProductComponent);
+
+            return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
+        }
     }
 }

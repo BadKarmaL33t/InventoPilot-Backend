@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,9 +33,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Transactional
     public LocationDto getLocationDetails(Department department) {
-        Location location = locationRepository.findByDepartment(department);
-        if (location != null) {
-            return locationDtoMapper.mapToDto(location);
+        Optional<Location> location = locationRepository.findByDepartment(department);
+        if (location.isPresent()) {
+            Location foundLocation = location.get();
+            return locationDtoMapper.mapToDto(foundLocation);
         } else {
             throw new RecordNotFoundException("Location: " + department + " not found");
         }
@@ -47,33 +49,35 @@ public class LocationServiceImpl implements LocationService {
         return locationDtoMapper.mapToDto(location);
     }
 
+    // will be updated when location details are finalized
     @Transactional
     public LocationDto updateLocation(Department department, LocationDto newLocation) {
-        Location existingLocation = locationRepository.findByDepartment(department);
-        if (existingLocation != null) {
-            Location updatedLocation = locationDtoMapper.mapToEntity(newLocation);
-            updatedLocation.setDepartment(department);
-            locationRepository.save(updatedLocation);
-            return locationDtoMapper.mapToDto(updatedLocation);
-        } else {
-            throw new RecordNotFoundException("Location: " + department + " not found");
-        }
+        return locationRepository.findByDepartment(department)
+                .map(existingLocation -> {
+                    existingLocation.setDepartment(department);
+                    locationRepository.save(existingLocation);
+                    return locationDtoMapper.mapToDto(existingLocation);
+                })
+                .orElseThrow(() -> new RecordNotFoundException("Location: " + department + " not found"));
     }
 
     @Transactional
     public void deleteLocation(Department department) {
-        Location location = locationRepository.findByDepartment(department);
-        if (location != null) {
-            locationRepository.delete(location);
+        Optional<Location> location = locationRepository.findByDepartment(department);
+        if (location.isPresent()) {
+            Location deleteLocation = location.get();
+            locationRepository.delete(deleteLocation);
         } else {
             throw new RecordNotFoundException("Location: " + department + " not found");
         }
     }
 
+    // will be updated when location details are finalized
     @Transactional
     public LocationDto updateLocationDetails(Department department, LocationDto updatedLocation) {
-        Location existingLocation = locationRepository.findByDepartment(department);
-        if (existingLocation != null) {
+        Optional<Location> existingLocation = locationRepository.findByDepartment(department);
+        if (existingLocation.isPresent()) {
+
             Location updatedLocationEntity = locationDtoMapper.mapToEntity(updatedLocation);
             updatedLocationEntity.setDepartment(department);
             locationRepository.save(updatedLocationEntity);
@@ -82,6 +86,4 @@ public class LocationServiceImpl implements LocationService {
             throw new RecordNotFoundException("Location: " + department + " not found");
         }
     }
-
-
 }

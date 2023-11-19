@@ -19,6 +19,19 @@ INSERT INTO products (name, product_type, stock, product_status, sold, serial_nu
 VALUES ('Product-1-S', 0, 1000, 1, 0, 'PSN00010', 1000, 5000, 'Product-1-Raw'),
        ('Product-1-R', 1, 1000, 1, 0, 'PSN00011', 1000, 5000, 'Product-1-Raw');
 
+INSERT INTO orders (order_date, delivery_date, order_status)
+VALUES
+    (CURRENT_DATE, CURRENT_DATE + INTERVAL '2 weeks', 2),
+    (CURRENT_DATE, CURRENT_DATE + INTERVAL '2 weeks', 2),
+    (CURRENT_DATE, CURRENT_DATE + INTERVAL '2 weeks', 2);
+
+INSERT INTO order_products (order_id, product_name, quantity)
+VALUES
+    (1, 'Product-1-S', 100),
+    (2, 'Product-1-R', 50),
+    (3, 'Product-1-S', 75),
+    (3, 'Product-1-R', 25);
+
 -- -- Establishing the relationship between Product-1-S and related components
 -- INSERT INTO product_components_products (product_components_id, products_id)
 -- VALUES ('Solution-Liq', 'Product-1-S'),

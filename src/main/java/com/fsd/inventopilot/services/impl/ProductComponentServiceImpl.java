@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,20 +38,24 @@ public class ProductComponentServiceImpl implements ProductComponentService {
 
     @Transactional
     public ProductComponentDto getComponentDetails(String name) {
-        ProductComponent existingComponent = componentRepository.findByName(name);
-        if (existingComponent != null) {
+        Optional<ProductComponent> productComponent = componentRepository.findByName(name);
+        if (productComponent.isPresent()) {
+            ProductComponent existingComponent = productComponent.get();
             return componentDtoMapper.mapToDto(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
     @Transactional
     public ProductComponentDto postComponent(ProductComponentDto componentDto) {
         ProductComponent component = componentDtoMapper.mapToEntity(componentDto);
 
-        Location warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
-        if (warehouse != null) {
-            warehouse.getComponents().add(component);
+        Optional<Location> warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse.isPresent()) {
+            Location location = warehouse.get();
+            location.getComponents().add(component);
+            locationRepository.save(location);
         } else {
             throw new RecordNotFoundException("Location warehouse could not be found");
         }
@@ -61,36 +66,39 @@ public class ProductComponentServiceImpl implements ProductComponentService {
 
     @Transactional
     public ProductComponentDto updateComponent(String name, ProductComponentDto newComponent) {
-        ProductComponent existingComponent = componentRepository.findByName(name);
-        if (existingComponent != null) {
-            ProductComponent updatedComponent = componentDtoMapper.mapToEntity(newComponent);
-            updatedComponent.setName(name);
-            updatedComponent.setComponentType(newComponent.getComponentType());
-            updatedComponent.setStock(newComponent.getStock());
-            updatedComponent.setProductStatus(newComponent.getProductStatus());
-            updatedComponent.setSerialNumber(newComponent.getSerialNumber());
-            updatedComponent.setMinimalStock(newComponent.getMinimalStock());
-            updatedComponent.setMaximalStock(newComponent.getMaximalStock());
+        return componentRepository.findByName(name)
+                .map(existingComponent -> {
+                    ProductComponent updatedComponent = componentDtoMapper.mapToEntity(newComponent);
+                    updatedComponent.setName(name);
+                    updatedComponent.setComponentType(newComponent.getComponentType());
+                    updatedComponent.setStock(newComponent.getStock());
+                    updatedComponent.setProductStatus(newComponent.getProductStatus());
+                    updatedComponent.setSerialNumber(newComponent.getSerialNumber());
+                    updatedComponent.setMinimalStock(newComponent.getMinimalStock());
+                    updatedComponent.setMaximalStock(newComponent.getMaximalStock());
 
-            componentRepository.save(updatedComponent);
-            return componentDtoMapper.mapToDto(updatedComponent);
-        }
-        throw new RecordNotFoundException("Component: " + name + " not found");
+                    componentRepository.save(updatedComponent);
+                    return componentDtoMapper.mapToDto(updatedComponent);
+                })
+                .orElseThrow(() -> new RecordNotFoundException("Component: " + name + " not found"));
     }
 
     @Transactional
     public void deleteComponent(String name) {
-        ProductComponent component = componentRepository.findByName(name);
-        if (component != null) {
-            componentRepository.delete(component);
+        Optional<ProductComponent> component = componentRepository.findByName(name);
+        if (component.isPresent()) {
+            ProductComponent existingComponent = component.get();
+            componentRepository.delete(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 
     @Transactional
     public ProductComponentDto updateComponentDetails(String name, ProductComponentDto updatedComponent) {
-        ProductComponent existingComponent = componentRepository.findByName(name);
-        if (existingComponent != null) {
+        Optional<ProductComponent> productComponent = componentRepository.findByName(name);
+        if (productComponent.isPresent()) {
+            ProductComponent existingComponent = productComponent.get();
             if (updatedComponent.getName() != null) {
                 existingComponent.setName(updatedComponent.getName());
             }
@@ -115,7 +123,8 @@ public class ProductComponentServiceImpl implements ProductComponentService {
 
             componentRepository.save(existingComponent);
             return componentDtoMapper.mapToDto(existingComponent);
+        } else {
+            throw new RecordNotFoundException("Component: " + name + " not found");
         }
-        throw new RecordNotFoundException("Component: " + name + " not found");
     }
 }

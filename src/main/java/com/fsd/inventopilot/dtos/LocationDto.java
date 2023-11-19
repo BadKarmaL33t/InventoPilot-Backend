@@ -12,9 +12,9 @@ public class LocationDto {
     @AllowedDepartment
     private Department department;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductComponentDto> composites;
+    private Set<String> compositeNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<RawMaterialDto> rawMaterials;
+    private Set<String> rawMaterialNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductDto> products;
+    private Set<String> productNames;
 }

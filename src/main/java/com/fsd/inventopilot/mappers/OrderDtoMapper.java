@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.BeanUtils;
 
 import java.text.ParseException;
-import java.util.Set;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,14 +25,14 @@ public class OrderDtoMapper {
 
         BeanUtils.copyProperties(order, dto);
         if (order.getOrderProducts() != null) {
-            Set<OrderProductDto> orderProductDtos = order.getOrderProducts()
+            Collection<OrderProductDto> orderProductDtos = order.getOrderProducts()
                     .stream()
                     .map(orderProductDtoMapper::mapToDto)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             dto.setOrderProducts(orderProductDtos);
         }
         dto.setOrderDate(FormatDate.formatTimestamp(order.getOrderDate()));
-
+        System.out.println(dto);
         return dto;
     }
 
@@ -41,7 +41,7 @@ public class OrderDtoMapper {
 
         BeanUtils.copyProperties(dto, order);
         if (dto.getOrderProducts() != null) {
-            Set<OrderProduct> orderProducts = dto.getOrderProducts()
+            Collection<OrderProduct> orderProducts = dto.getOrderProducts()
                     .stream()
                     .map(orderProductDtoMapper::mapToEntity)
                     .collect(Collectors.toSet());

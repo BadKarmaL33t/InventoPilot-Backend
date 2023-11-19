@@ -1,6 +1,7 @@
 package com.fsd.inventopilot.dtos;
 
 import com.fsd.inventopilot.models.ComponentType;
+import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedComponentType;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
@@ -8,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 public class ProductComponentDto {
@@ -30,7 +31,7 @@ public class ProductComponentDto {
     @Pattern(regexp = "[0-9]+")
     private int maximalStock;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<LocationDto> locations;
+    private Collection<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<ProductDto> products;
+    private Collection<String> productNames;
 }

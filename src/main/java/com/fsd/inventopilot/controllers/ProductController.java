@@ -2,9 +2,6 @@ package com.fsd.inventopilot.controllers;
 
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
-import com.fsd.inventopilot.models.ProductComponent;
-import com.fsd.inventopilot.models.ProductType;
-import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +24,6 @@ public class ProductController {
         List<ProductDto> productDtos;
         productDtos = productService.getAllProducts();
 
-        return ResponseEntity.ok().body(productDtos);
-    }
-
-    @GetMapping("/{type}")
-    public ResponseEntity<List<ProductDto>> getProductsByType(@PathVariable ProductType type) {
-        List<ProductDto> productDtos = productService.getProductsByType(type);
         return ResponseEntity.ok().body(productDtos);
     }
 
@@ -77,22 +68,42 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping("/{name}/raw")
+    @PatchMapping("/{name}/raw/{rawMaterialName}")
     public ResponseEntity<ProductDto> addRawMaterialToProduct(
             @PathVariable("name") String productName,
-            @RequestBody RawMaterial rawMaterial) {
+            @PathVariable("rawMaterialName") String rawMaterialName) {
 
-        ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterial);
+        ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterialName);
 
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping("/{name}/components")
+    @DeleteMapping("/{name}/raw/{rawMaterialName}")
+    public ResponseEntity<ProductDto> removeRawMaterialFromProduct(
+            @PathVariable("name") String productName,
+            @PathVariable("rawMaterialName") String rawMaterialName) {
+
+        ProductDto dto = productService.removeRawMaterialFromProduct(productName, rawMaterialName);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{name}/components/{productComponentName}")
     public ResponseEntity<ProductDto> addProductComponentToProduct(
             @PathVariable("name") String productName,
-            @RequestBody ProductComponent productComponent) {
+            @PathVariable("productComponentName") String productComponentName) {
 
-        ProductDto dto = productService.addProductComponentToProduct(productName, productComponent);
+        ProductDto dto = productService.addProductComponentToProduct(productName, productComponentName);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("/{name}/components/{productComponentName}")
+    public ResponseEntity<ProductDto> removeProductComponentFromProduct(
+            @PathVariable("name") String productName,
+            @PathVariable("productComponentName") String productComponentName) {
+
+        ProductDto dto = productService.removeProductComponentFromProduct(productName, productComponentName);
 
         return ResponseEntity.ok().body(dto);
     }

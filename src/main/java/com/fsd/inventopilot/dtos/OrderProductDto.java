@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class OrderProductDto {
     @Pattern(regexp = "[0-9]+")
-    private Long id;
+    private Long orderId;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Product product;
+    private String productName;
     @Pattern(regexp = "[0-9]+")
     private int quantity;
 }

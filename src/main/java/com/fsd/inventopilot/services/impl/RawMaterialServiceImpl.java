@@ -49,12 +49,15 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     public RawMaterialDto postRawMaterial(RawMaterialDto rawMaterialDto) {
         RawMaterial rawMaterial = rawMaterialDtoMapper.mapToEntity(rawMaterialDto);
 
-        Optional<Location> warehouseOptional = Optional.ofNullable(locationRepository.findByDepartment(Department.WAREHOUSE));
-        Location warehouse = warehouseOptional.orElseThrow(() ->
-                new RecordNotFoundException("Location warehouse could not be found")
-        );
+        Optional<Location> warehouse = locationRepository.findByDepartment(Department.WAREHOUSE);
+        if (warehouse.isPresent()) {
+            Location location = warehouse.get();
+            location.getRaws().add(rawMaterial);
+            locationRepository.save(location);
+        } else {
+            throw new RecordNotFoundException("Location warehouse could not be found");
+        }
 
-        warehouse.getRaws().add(rawMaterial);
         rawMaterialRepository.save(rawMaterial);
         return rawMaterialDtoMapper.mapToDto(rawMaterial);
     }
