@@ -105,12 +105,26 @@ public class OrderServiceImpl implements OrderService {
             Product product = optionalProduct.orElseThrow(() ->
                     new RecordNotFoundException("Product not found: " + orderProductDto.getProductName()));
 
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setOrder(order);
-            orderProduct.setProduct(product);
-            orderProduct.setQuantity(orderProductDto.getQuantity());
+            // Check if the product already exists in the order
+            Optional<OrderProduct> existingOrderProduct = order.getOrderProducts()
+                    .stream()
+                    .filter(op -> op.getProduct().equals(product))
+                    .findFirst();
 
-            order.getOrderProducts().add(orderProduct);
+            if (existingOrderProduct.isPresent()) {
+                // Product already exists, update the quantity
+                OrderProduct orderProduct = existingOrderProduct.get();
+                int newQuantity = orderProduct.getQuantity() + orderProductDto.getQuantity();
+                orderProduct.setQuantity(newQuantity);
+            } else {
+                // Product doesn't exist, create a new entry
+                OrderProduct orderProduct = new OrderProduct();
+                orderProduct.setOrder(order);
+                orderProduct.setProduct(product);
+                orderProduct.setQuantity(orderProductDto.getQuantity());
+
+                order.getOrderProducts().add(orderProduct);
+            }
         }
         orderRepository.save(order);
 
@@ -118,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public OrderDto updateOrderProducts(Long orderId, String productName, List<OrderProductDto> orderProductDtos) {
+    public OrderDto subtractOrderProducts(Long orderId, List<OrderProductDto> orderProductDtos) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         Order order = optionalOrder.orElseThrow(() ->
@@ -129,25 +143,20 @@ public class OrderServiceImpl implements OrderService {
                     .filter(op -> op.getProduct().getName().equals(orderProductDto.getProductName()))
                     .findFirst();
 
-            optionalOrderProduct.ifPresent(orderProduct -> orderProduct.setQuantity(orderProductDto.getQuantity()));
+            if (optionalOrderProduct.isPresent()) {
+                OrderProduct orderProduct = optionalOrderProduct.get();
+                int newQuantity = orderProduct.getQuantity() - orderProductDto.getQuantity();
 
-            if (optionalOrderProduct.isEmpty()) {
-                Optional<Product> optionalProduct = productRepository.findByName(orderProductDto.getProductName());
-                Product product = optionalProduct.orElseThrow(() ->
-                        new RecordNotFoundException("Product not found: " + orderProductDto.getProductName()));
-
-                OrderProduct newOrderProduct = new OrderProduct();
-                newOrderProduct.setOrder(order);
-                newOrderProduct.setProduct(product);
-                newOrderProduct.setQuantity(orderProductDto.getQuantity());
-
-                order.getOrderProducts().add(newOrderProduct);
+                if (newQuantity > 0) {
+                    orderProduct.setQuantity(newQuantity);
+                } else {
+                    // Remove the product if the quantity becomes zero or negative
+                    order.getOrderProducts().remove(orderProduct);
+                }
+            } else {
+                throw new RecordNotFoundException("Product not found in order: " + orderProductDto.getProductName());
             }
         }
-
-        // Remove products if with the update no orders are associated with them
-        order.getOrderProducts().removeIf(orderProduct -> orderProductDtos.stream()
-                .noneMatch(dto -> dto.getProductName().equals(orderProduct.getProduct().getName())));
 
         orderRepository.save(order);
 

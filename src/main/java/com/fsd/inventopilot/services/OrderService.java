@@ -18,5 +18,5 @@ public interface OrderService {
     OrderDto addProductToOrder(Long id, List<OrderProductDto> orderProductDtos);
     OrderDto updateOrderStatus(Long orderId, OrderStatus newStatus);
     OrderDto removeProductFromOrder(Long orderId, String productName);
-    OrderDto updateOrderProducts(Long id, String productName, List<OrderProductDto> orderProductDtos);
+    OrderDto subtractOrderProducts(Long orderId, List<OrderProductDto> orderProductDtos);
 }

@@ -50,16 +50,16 @@ public class OrderController {
         return ResponseEntity.created(location).body(dto);
     }
 
-    @PatchMapping("/{id}/items")
+    @PatchMapping("/{id}/add-items")
     public ResponseEntity<OrderDto> addProductToOrder(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
         OrderDto dto = orderService.addProductToOrder(id, orderProductDtos);
 
         return ResponseEntity.ok().body(dto);
     }
 
-    @PatchMapping("/{id}/items/{name}")
-    public ResponseEntity<OrderDto> updateOrderProducts(@PathVariable Long id, @PathVariable("name") String productName, @RequestBody List<OrderProductDto> orderProductDtos) {
-        OrderDto dto = orderService.updateOrderProducts(id, productName, orderProductDtos);
+    @PatchMapping("/{id}/subtract-items")
+    public ResponseEntity<OrderDto> subtractOrderProducts(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
+        OrderDto dto = orderService.subtractOrderProducts(id, orderProductDtos);
 
         return ResponseEntity.ok().body(dto);
     }
