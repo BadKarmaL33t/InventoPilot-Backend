@@ -32,7 +32,7 @@ public class OrderDtoMapper {
             dto.setOrderProducts(orderProductDtos);
         }
         dto.setOrderDate(FormatDate.formatTimestamp(order.getOrderDate()));
-        System.out.println(dto);
+        dto.setDeliveryDate(FormatDate.formatTimestamp(order.getDeliveryDate()));
         return dto;
     }
 
@@ -48,6 +48,7 @@ public class OrderDtoMapper {
             order.setOrderProducts(orderProducts);
         }
         order.setOrderDate(FormatDate.parseTimestamp(dto.getOrderDate()));
+        order.setDeliveryDate(FormatDate.parseTimestamp(dto.getDeliveryDate()));
 
         return order;
     }
