@@ -1,6 +1,5 @@
 package com.fsd.inventopilot.dtos;
 
-import com.fsd.inventopilot.models.Product;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 

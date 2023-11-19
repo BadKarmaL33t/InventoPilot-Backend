@@ -8,6 +8,7 @@ import com.fsd.inventopilot.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthResponse> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response) {
+    public ResponseEntity<JwtAuthResponse> signIn(@RequestBody SignInRequest signInRequest, @NotNull HttpServletResponse response) {
         JwtAuthResponse jwtAuthResponse = authService.signIn(signInRequest);
 
         // Set an HTTP-only cookie for the refresh token

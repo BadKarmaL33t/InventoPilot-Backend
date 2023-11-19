@@ -5,5 +5,5 @@ public enum OrderStatus {
     ADD_TO_STOCK,
     PRODUCTION,
     TESTING,
-    SHIPPED
+    PENDING, SHIPPED
 }

@@ -5,7 +5,6 @@ import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.models.ProductType;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
 import com.fsd.inventopilot.validations.AllowedProductType;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

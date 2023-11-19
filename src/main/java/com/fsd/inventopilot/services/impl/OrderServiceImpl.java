@@ -183,6 +183,7 @@ public class OrderServiceImpl implements OrderService {
         return orderDtoMapper.mapToDto(order);
     }
 
+    // to be implemented later:
     @Transactional
     public OrderDto updateOrderStatus(Long orderId, OrderStatus newStatus) {
         Order order = orderRepository.findById(orderId)
