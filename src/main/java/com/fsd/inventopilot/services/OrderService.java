@@ -6,10 +6,11 @@ import com.fsd.inventopilot.models.OrderStatus;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
     List<OrderDto> getAllOrders();
-    OrderDto getOrderDetails(Long id);
+    Optional<OrderDto> getOrderDetails(Long id);
     OrderDto createOrder(OrderDto orderDto) throws ParseException;
     OrderDto updateOrder(Long id, OrderDto newOrder) throws ParseException;
     void deleteOrder(Long id);

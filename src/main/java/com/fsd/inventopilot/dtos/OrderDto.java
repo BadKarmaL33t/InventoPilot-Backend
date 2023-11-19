@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.Set;
 
 @Data
 public class OrderDto {

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/app/orders")
@@ -30,8 +31,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrderDetails(@PathVariable("id") Long id) {
-        OrderDto dto = orderService.getOrderDetails(id);
+    public ResponseEntity<Optional<OrderDto>> getOrderDetails(@PathVariable("id") Long id) {
+        Optional<OrderDto> dto = orderService.getOrderDetails(id);
 
         return ResponseEntity.ok().body(dto);
     }

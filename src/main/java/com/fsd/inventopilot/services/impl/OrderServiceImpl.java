@@ -8,6 +8,7 @@ import com.fsd.inventopilot.models.*;
 import com.fsd.inventopilot.repositories.OrderRepository;
 import com.fsd.inventopilot.repositories.ProductRepository;
 import com.fsd.inventopilot.services.OrderService;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +33,22 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
-                .map(orderDtoMapper::mapToDto)
+                .map(order -> {
+                    // Initialize the orderProducts collection to trigger eager fetching
+                    Hibernate.initialize(order.getOrderProducts());
+                    return orderDtoMapper.mapToDto(order);
+                })
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public OrderDto getOrderDetails(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("Order not found: " + id));
-        return orderDtoMapper.mapToDto(order);
+    public Optional<OrderDto> getOrderDetails(Long id) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        return optionalOrder.map(order -> {
+            // Initialize the orderProducts collection to trigger eager fetching
+            Hibernate.initialize(order.getOrderProducts());
+            return orderDtoMapper.mapToDto(order);
+        });
     }
 
     @Transactional
