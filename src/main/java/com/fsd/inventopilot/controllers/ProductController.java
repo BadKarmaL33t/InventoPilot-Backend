@@ -2,7 +2,6 @@ package com.fsd.inventopilot.controllers;
 
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
-import com.fsd.inventopilot.models.ProductType;
 import com.fsd.inventopilot.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,12 +78,32 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @DeleteMapping("/{name}/raw/{rawMaterialName}")
+    public ResponseEntity<ProductDto> removeRawMaterialFromProduct(
+            @PathVariable("name") String productName,
+            @PathVariable("rawMaterialName") String rawMaterialName) {
+
+        ProductDto dto = productService.removeRawMaterialFromProduct(productName, rawMaterialName);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     @PatchMapping("/{name}/components/{productComponentName}")
     public ResponseEntity<ProductDto> addProductComponentToProduct(
             @PathVariable("name") String productName,
             @PathVariable("productComponentName") String productComponentName) {
 
         ProductDto dto = productService.addProductComponentToProduct(productName, productComponentName);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("/{name}/components/{productComponentName}")
+    public ResponseEntity<ProductDto> removeProductComponentFromProduct(
+            @PathVariable("name") String productName,
+            @PathVariable("productComponentName") String productComponentName) {
+
+        ProductDto dto = productService.removeProductComponentFromProduct(productName, productComponentName);
 
         return ResponseEntity.ok().body(dto);
     }

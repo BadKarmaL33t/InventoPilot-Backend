@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     private final RawMaterialRepository rawMaterialRepository;
     private final ProductComponentRepository productComponentRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository, RawMaterialServiceImpl rawMaterialService, ProductComponentServiceImpl productComponentService, RawMaterialRepository rawMaterialRepository, ProductComponentRepository productComponentRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDtoMapper productDtoMapper, LocationRepository locationRepository, RawMaterialRepository rawMaterialRepository, ProductComponentRepository productComponentRepository) {
         this.productRepository = productRepository;
         this.productDtoMapper = productDtoMapper;
         this.locationRepository = locationRepository;
@@ -155,6 +155,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
+    public ProductDto removeRawMaterialFromProduct(String productName, String rawMaterialName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<RawMaterial> rawMaterial = rawMaterialRepository.findByName(rawMaterialName);
+
+        if (product.isPresent() && rawMaterial.isPresent()) {
+            Product existingProduct = product.get();
+            RawMaterial existingRawMaterial = rawMaterial.get();
+
+            // Remove the raw material from the product
+            existingProduct.setRaw(null);
+
+            // Remove the product from the raw material's products
+            Collection<Product> products = existingRawMaterial.getProducts();
+            products.remove(existingProduct);
+            existingRawMaterial.setProducts(products);
+
+            productRepository.save(existingProduct);
+            rawMaterialRepository.save(existingRawMaterial);
+
+            return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
+        }
+    }
+
+    @Transactional
     public ProductDto addProductComponentToProduct(String productName, String productComponentName) {
         Optional<Product> product = productRepository.findByName(productName);
         Optional<ProductComponent> productComponent = productComponentRepository.findByName(productComponentName);
@@ -175,6 +201,34 @@ public class ProductServiceImpl implements ProductService {
 
             productRepository.save(existingProduct);
             productComponentRepository.save(productComponent.get());
+
+            return productDtoMapper.mapToDto(existingProduct);
+        } else {
+            throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");
+        }
+    }
+
+    @Transactional
+    public ProductDto removeProductComponentFromProduct(String productName, String productComponentName) {
+        Optional<Product> product = productRepository.findByName(productName);
+        Optional<ProductComponent> productComponent = productComponentRepository.findByName(productComponentName);
+
+        if (product.isPresent() && productComponent.isPresent()) {
+            Product existingProduct = product.get();
+            ProductComponent existingProductComponent = productComponent.get();
+
+            // Remove the productComponent from the product's components
+            Collection<ProductComponent> productComponents = existingProduct.getComponents();
+            productComponents.remove(existingProductComponent);
+            existingProduct.setComponents(productComponents);
+
+            // Remove the product from the productComponent's products
+            Collection<Product> products = existingProductComponent.getProducts();
+            products.remove(existingProduct);
+            existingProductComponent.setProducts(products);
+
+            productRepository.save(existingProduct);
+            productComponentRepository.save(existingProductComponent);
 
             return productDtoMapper.mapToDto(existingProduct);
         } else {

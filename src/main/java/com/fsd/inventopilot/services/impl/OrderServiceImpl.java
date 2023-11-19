@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public OrderDto postOrder(OrderDto orderDto) throws ParseException {
+    public OrderDto createOrder(OrderDto orderDto) throws ParseException {
         Order order = orderDtoMapper.mapToEntity(orderDto);
         orderRepository.save(order);
         return orderDtoMapper.mapToDto(order);
@@ -84,13 +85,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public OrderDto addProductsToOrder(Long orderId, List<OrderProductDto> orderProductDtos) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RecordNotFoundException("Order not found: " + orderId));
+    public OrderDto addProductToOrder(Long orderId, List<OrderProductDto> orderProductDtos) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        Order order = optionalOrder.orElseThrow(() ->
+                new RecordNotFoundException("Order not found: " + orderId));
 
         for (OrderProductDto orderProductDto : orderProductDtos) {
-            Product product = productRepository.findById(orderProductDto.getProduct().getName())
-                    .orElseThrow(() -> new RecordNotFoundException("Product not found: " + orderProductDto.getProduct().getName()));
+            Optional<Product> optionalProduct = productRepository.findByName(orderProductDto.getProductName());
+
+            Product product = optionalProduct.orElseThrow(() ->
+                    new RecordNotFoundException("Product not found: " + orderProductDto.getProductName()));
 
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder(order);
@@ -99,6 +104,63 @@ public class OrderServiceImpl implements OrderService {
 
             order.getOrderProducts().add(orderProduct);
         }
+        orderRepository.save(order);
+
+        return orderDtoMapper.mapToDto(order);
+    }
+
+    @Transactional
+    public OrderDto updateOrderProducts(Long orderId, String productName, List<OrderProductDto> orderProductDtos) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        Order order = optionalOrder.orElseThrow(() ->
+                new RecordNotFoundException("Order not found: " + orderId));
+
+        for (OrderProductDto orderProductDto : orderProductDtos) {
+            Optional<OrderProduct> optionalOrderProduct = order.getOrderProducts().stream()
+                    .filter(op -> op.getProduct().getName().equals(orderProductDto.getProductName()))
+                    .findFirst();
+
+            optionalOrderProduct.ifPresent(orderProduct -> orderProduct.setQuantity(orderProductDto.getQuantity()));
+
+            if (optionalOrderProduct.isEmpty()) {
+                Optional<Product> optionalProduct = productRepository.findByName(orderProductDto.getProductName());
+                Product product = optionalProduct.orElseThrow(() ->
+                        new RecordNotFoundException("Product not found: " + orderProductDto.getProductName()));
+
+                OrderProduct newOrderProduct = new OrderProduct();
+                newOrderProduct.setOrder(order);
+                newOrderProduct.setProduct(product);
+                newOrderProduct.setQuantity(orderProductDto.getQuantity());
+
+                order.getOrderProducts().add(newOrderProduct);
+            }
+        }
+
+        // Remove products if with the update no orders are associated with them
+        order.getOrderProducts().removeIf(orderProduct -> orderProductDtos.stream()
+                .noneMatch(dto -> dto.getProductName().equals(orderProduct.getProduct().getName())));
+
+        orderRepository.save(order);
+
+        return orderDtoMapper.mapToDto(order);
+    }
+
+    @Transactional
+    public OrderDto removeProductFromOrder(Long orderId, String productName) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        Order order = optionalOrder.orElseThrow(() ->
+                new RecordNotFoundException("Order not found: " + orderId));
+
+        Optional<OrderProduct> optionalOrderProduct = order.getOrderProducts().stream()
+                .filter(op -> op.getProduct().getName().equals(productName))
+                .findFirst();
+
+        OrderProduct orderProduct = optionalOrderProduct.orElseThrow(() ->
+                new RecordNotFoundException("Product not found in order: " + productName));
+
+        order.getOrderProducts().remove(orderProduct);
         orderRepository.save(order);
 
         return orderDtoMapper.mapToDto(order);

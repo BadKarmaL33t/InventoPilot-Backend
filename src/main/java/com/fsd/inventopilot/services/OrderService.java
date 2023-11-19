@@ -10,10 +10,12 @@ import java.util.List;
 public interface OrderService {
     List<OrderDto> getAllOrders();
     OrderDto getOrderDetails(Long id);
-    OrderDto postOrder(OrderDto orderDto) throws ParseException;
+    OrderDto createOrder(OrderDto orderDto) throws ParseException;
     OrderDto updateOrder(Long id, OrderDto newOrder) throws ParseException;
     void deleteOrder(Long id);
     OrderDto updateOrderDetails(Long id, OrderDto updatedOrder);
-    OrderDto addProductsToOrder(Long id, List<OrderProductDto> orderProductDtos);
+    OrderDto addProductToOrder(Long id, List<OrderProductDto> orderProductDtos);
     OrderDto updateOrderStatus(Long orderId, OrderStatus newStatus);
+    OrderDto removeProductFromOrder(Long orderId, String productName);
+    OrderDto updateOrderProducts(Long id, String productName, List<OrderProductDto> orderProductDtos);
 }

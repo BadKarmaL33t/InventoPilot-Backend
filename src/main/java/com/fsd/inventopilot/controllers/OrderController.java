@@ -3,7 +3,6 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.OrderDto;
 import com.fsd.inventopilot.dtos.OrderProductDto;
 import com.fsd.inventopilot.models.Order;
-import com.fsd.inventopilot.models.OrderStatus;
 import com.fsd.inventopilot.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> postOrder(@RequestBody OrderDto orderDto) throws ParseException {
-        OrderDto dto = orderService.postOrder(orderDto);
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) throws ParseException {
+        OrderDto dto = orderService.createOrder(orderDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -50,9 +49,26 @@ public class OrderController {
         return ResponseEntity.created(location).body(dto);
     }
 
-    @PostMapping("/{id}/items")
-    public ResponseEntity<OrderDto> addProductsToOrder(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
-        OrderDto dto = orderService.addProductsToOrder(id, orderProductDtos);
+    @PatchMapping("/{id}/items")
+    public ResponseEntity<OrderDto> addProductToOrder(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
+        OrderDto dto = orderService.addProductToOrder(id, orderProductDtos);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/items/{name}")
+    public ResponseEntity<OrderDto> updateOrderProducts(@PathVariable Long id, @PathVariable("name") String productName, @RequestBody List<OrderProductDto> orderProductDtos) {
+        OrderDto dto = orderService.updateOrderProducts(id, productName, orderProductDtos);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("/{id}/items/{name}")
+    public ResponseEntity<OrderDto> removeProductFromOrder(
+            @PathVariable("id") Long orderId,
+            @PathVariable("name") String productName) {
+
+        OrderDto dto = orderService.removeProductFromOrder(orderId, productName);
 
         return ResponseEntity.ok().body(dto);
     }
