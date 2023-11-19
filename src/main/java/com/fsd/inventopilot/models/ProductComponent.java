@@ -3,7 +3,7 @@ package com.fsd.inventopilot.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -23,10 +23,10 @@ public class ProductComponent {
     private int minimalStock;
     private int maximalStock;
     @ManyToMany(mappedBy = "components", cascade = CascadeType.ALL)
-    private Set<Location> locations;
+    private Collection<Location> locations;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "product_components_products",
-            joinColumns = @JoinColumn(name = "product_components_id"),
-            inverseJoinColumns = @JoinColumn(name = "products_id"))
-    private Set<Product> products;
+            joinColumns = @JoinColumn(name = "product_components_name"),
+            inverseJoinColumns = @JoinColumn(name = "products_name"))
+    private Collection<Product> products;
 }

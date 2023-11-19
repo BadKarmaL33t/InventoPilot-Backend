@@ -69,20 +69,20 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @PatchMapping("/{name}/raw")
+    @PatchMapping("/{name}/raw/{rawMaterialName}")
     public ResponseEntity<ProductDto> addRawMaterialToProduct(
             @PathVariable("name") String productName,
-            @RequestBody String rawMaterialName) {
+            @PathVariable("rawMaterialName") String rawMaterialName) {
 
         ProductDto dto = productService.addRawMaterialToProduct(productName, rawMaterialName);
 
         return ResponseEntity.ok().body(dto);
     }
 
-    @PatchMapping("/{name}/components")
+    @PatchMapping("/{name}/components/{productComponentName}")
     public ResponseEntity<ProductDto> addProductComponentToProduct(
             @PathVariable("name") String productName,
-            @RequestBody String productComponentName) {
+            @PathVariable("productComponentName") String productComponentName) {
 
         ProductDto dto = productService.addProductComponentToProduct(productName, productComponentName);
 

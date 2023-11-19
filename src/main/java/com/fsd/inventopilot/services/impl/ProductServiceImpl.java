@@ -12,9 +12,9 @@ import com.fsd.inventopilot.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,8 +135,19 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.isPresent() && rawMaterial.isPresent()) {
             Product existingProduct = product.get();
+            RawMaterial existingRawMaterial = rawMaterial.get();
+
+            // Update the product's raw material
             existingProduct.setRaw(rawMaterial.get());
+
+            // Update the raw material's products
+            Collection<Product> products = existingRawMaterial.getProducts();
+            products.add(existingProduct);
+            existingRawMaterial.setProducts(products);
+
             productRepository.save(existingProduct);
+            rawMaterialRepository.save(rawMaterial.get());
+
             return productDtoMapper.mapToDto(existingProduct);
         } else {
             throw new RecordNotFoundException("Product: " + productName + " or RawMaterial: " + rawMaterialName + " not found");
@@ -150,10 +161,21 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.isPresent() && productComponent.isPresent()) {
             Product existingProduct = product.get();
-            Set<ProductComponent> productComponents = existingProduct.getComponents();
+            ProductComponent existingProductComponent = productComponent.get();
+
+            // Update the product's components
+            Collection<ProductComponent> productComponents = existingProduct.getComponents();
             productComponents.add(productComponent.get());
             existingProduct.setComponents(productComponents);
+
+            // Update the productComponent's products
+            Collection<Product> products = existingProductComponent.getProducts();
+            products.add(existingProduct);
+            existingProductComponent.setProducts(products);
+
             productRepository.save(existingProduct);
+            productComponentRepository.save(productComponent.get());
+
             return productDtoMapper.mapToDto(existingProduct);
         } else {
             throw new RecordNotFoundException("Product: " + productName + " or ProductComponent: " + productComponentName + " not found");

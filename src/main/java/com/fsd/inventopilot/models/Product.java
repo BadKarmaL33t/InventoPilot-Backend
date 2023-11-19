@@ -3,7 +3,7 @@ package com.fsd.inventopilot.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -21,11 +21,11 @@ public class Product {
     private String serialNumber;
     private int minimalStock;
     private int maximalStock;
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
-    private Set<Location> locations;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products", cascade = CascadeType.ALL)
+    private Collection<Location> locations;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "raw_material_name")
     private RawMaterial raw;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products", cascade = CascadeType.ALL)
-    private Set<ProductComponent> components;
+    private Collection<ProductComponent> components;
 }

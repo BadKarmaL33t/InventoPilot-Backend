@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 public class ProductDto {
@@ -32,9 +32,9 @@ public class ProductDto {
     @Pattern(regexp = "[0-9]+")
     private int maximalStock;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<Department> locationNames;
+    private Collection<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String rawMaterialName;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
-    private Set<String> componentNames;
+    private Collection<String> componentNames;
 }

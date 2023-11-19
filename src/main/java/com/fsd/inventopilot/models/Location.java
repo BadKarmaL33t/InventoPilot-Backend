@@ -3,7 +3,7 @@ package com.fsd.inventopilot.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -16,15 +16,15 @@ public class Location {
     @JoinTable(name = "locations_product_components",
             joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "product_components_id"))
-    private Set<ProductComponent> components;
+    private Collection<ProductComponent> components;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "locations_raw_materials",
             joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "raw_materials_id"))
-    private Set<RawMaterial> raws;
+    private Collection<RawMaterial> raws;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "locations_products",
             joinColumns = @JoinColumn(name = "locations_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
-    private Set<Product> products;
+    private Collection<Product> products;
 }
