@@ -25,32 +25,34 @@ public class RawMaterialDtoMapper {
 
     public RawMaterialDto mapToDto(RawMaterial rawMaterial) {
         RawMaterialDto dto = new RawMaterialDto();
-
         BeanUtils.copyProperties(rawMaterial, dto);
-        dto.setLocationNames(rawMaterial.getLocations().stream()
-                .map(Location::getDepartment)
-                .collect(Collectors.toSet()));
-        dto.setProductNames(rawMaterial.getProducts().stream()
-                .map(Product::getName)
-                .collect(Collectors.toSet()));
+
+        dto.setLocationNames(rawMaterial.getLocations() != null
+                ? rawMaterial.getLocations().stream().map(Location::getDepartment).collect(Collectors.toSet())
+                : null);
+        dto.setProductNames(rawMaterial.getProducts() != null
+                ? rawMaterial.getProducts().stream().map(Product::getName).collect(Collectors.toSet())
+                : null);
 
         return dto;
     }
 
     public RawMaterial mapToEntity(RawMaterialDto dto) {
         RawMaterial rawMaterial = new RawMaterial();
-
         BeanUtils.copyProperties(dto, rawMaterial);
 
-        rawMaterial.setLocations(dto.getLocationNames().stream()
-                .map(department -> locationRepository.findByDepartment(department)
-                        .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + department)))
-                .collect(Collectors.toSet()));
-
-        rawMaterial.setProducts(dto.getProductNames().stream()
-                .map(name -> productRepository.findByName(name)
-                        .orElseThrow(() -> new RecordNotFoundException("Product not found with name: " + name)))
-                .collect(Collectors.toSet()));
+        rawMaterial.setLocations(dto.getLocationNames() != null
+                ? dto.getLocationNames().stream().map(department ->
+                        locationRepository.findByDepartment(department)
+                                .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + department)))
+                .collect(Collectors.toSet())
+                : null);
+        rawMaterial.setProducts(dto.getProductNames() != null
+                ? dto.getProductNames().stream().map(name ->
+                        productRepository.findByName(name)
+                                .orElseThrow(() -> new RecordNotFoundException("Product not found with name: " + name)))
+                .collect(Collectors.toSet())
+                : null);
 
         return rawMaterial;
     }

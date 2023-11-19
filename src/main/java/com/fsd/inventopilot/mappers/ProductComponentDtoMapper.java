@@ -28,13 +28,20 @@ public class ProductComponentDtoMapper {
         ProductComponentDto dto = new ProductComponentDto();
 
         BeanUtils.copyProperties(component, dto);
-        dto.setLocationNames(component.getLocations().stream()
-                .map(Location::getDepartment)
-                .collect(Collectors.toSet()));
-        dto.setProductNames(component.getProducts().stream()
-                .map(Product::getName)
-                .collect(Collectors.toSet()));
-
+        if (component.getLocations() != null) {
+            dto.setLocationNames(component.getLocations().stream()
+                    .map(Location::getDepartment)
+                    .collect(Collectors.toSet()));
+        } else {
+            dto.setLocationNames(null);
+        }
+        if (component.getProducts() != null) {
+            dto.setProductNames(component.getProducts().stream()
+                    .map(Product::getName)
+                    .collect(Collectors.toSet()));
+        } else {
+            dto.setProductNames(null);
+        }
         return dto;
     }
 
@@ -42,16 +49,22 @@ public class ProductComponentDtoMapper {
         ProductComponent component = new ProductComponent();
 
         BeanUtils.copyProperties(dto, component);
-        component.setLocations(dto.getLocationNames().stream()
-                .map(department -> locationRepository.findByDepartment(department)
-                        .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + department)))
-                .collect(Collectors.toSet()));
-
-        component.setProducts(dto.getProductNames().stream()
-                .map(name -> productRepository.findByName(name)
-                        .orElseThrow(() -> new RecordNotFoundException("Product not found with name: " + name)))
-                .collect(Collectors.toSet()));
-
+        if (dto.getLocationNames() != null) {
+            component.setLocations(dto.getLocationNames().stream()
+                    .map(department -> locationRepository.findByDepartment(department)
+                            .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + department)))
+                    .collect(Collectors.toSet()));
+        } else {
+            component.setLocations(null);
+        }
+        if (dto.getProductNames() != null) {
+            component.setProducts(dto.getProductNames().stream()
+                    .map(name -> productRepository.findByName(name)
+                            .orElseThrow(() -> new RecordNotFoundException("Product not found with name: " + name)))
+                    .collect(Collectors.toSet()));
+        } else {
+            component.setProducts(null);
+        }
         return component;
     }
 }

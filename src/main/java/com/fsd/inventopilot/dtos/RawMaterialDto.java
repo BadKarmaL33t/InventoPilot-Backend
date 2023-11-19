@@ -13,8 +13,6 @@ import java.util.Collection;
 
 @Data
 public class RawMaterialDto {
-    @NotNull
-    private Long id;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     @Size(min = 2, max = 25)
     private String name;
