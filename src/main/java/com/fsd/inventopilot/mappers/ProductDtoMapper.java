@@ -29,14 +29,23 @@ public class ProductDtoMapper {
         ProductDto dto = new ProductDto();
 
         BeanUtils.copyProperties(product, dto);
-        dto.setLocationNames(product.getLocations().stream()
-                .map(Location::getDepartment)
-                .collect(Collectors.toSet()));
-        dto.setRawMaterialName(product.getRaw() != null ? product.getRaw().getName() : null);
-        dto.setComponentNames(product.getComponents().stream()
-                .map(ProductComponent::getName)
-                .collect(Collectors.toSet()));
 
+        if (product.getLocations() != null) {
+            dto.setLocationNames(product.getLocations().stream()
+                    .map(Location::getDepartment)
+                    .collect(Collectors.toSet()));
+        } else {
+            dto.setLocationNames(null);
+        }
+        dto.setRawMaterialName(product.getRaw() != null ? product.getRaw().getName() : null);
+
+        if (product.getComponents() != null) {
+            dto.setComponentNames(product.getComponents().stream()
+                    .map(ProductComponent::getName)
+                    .collect(Collectors.toSet()));
+        } else {
+            dto.setComponentNames(null);
+        }
         return dto;
     }
 
@@ -44,16 +53,31 @@ public class ProductDtoMapper {
         Product product = new Product();
 
         BeanUtils.copyProperties(dto, product);
-        product.setLocations(dto.getLocationNames().stream()
-                .map(departmentName -> locationRepository.findByDepartment(departmentName)
-                        .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + departmentName)))
-                .collect(Collectors.toSet()));
-        product.setRaw(dto.getRawMaterialName() != null ? rawMaterialRepository.findByName(dto.getRawMaterialName())
-                .orElseThrow(() -> new RecordNotFoundException("RawMaterial not found with name: " + dto.getRawMaterialName())) : null);
-        product.setComponents(dto.getComponentNames().stream()
-                .map(name -> productComponentRepository.findByName(name)
-                        .orElseThrow(() -> new RecordNotFoundException("ProductComponent not found with name: " + name)))
-                .collect(Collectors.toSet()));
+
+        if (dto.getLocationNames() != null) {
+            product.setLocations(dto.getLocationNames().stream()
+                    .map(departmentName -> locationRepository.findByDepartment(departmentName)
+                            .orElseThrow(() -> new RecordNotFoundException("Location not found with department: " + departmentName)))
+                    .collect(Collectors.toSet()));
+        } else {
+            product.setLocations(null);
+        }
+
+        if (dto.getRawMaterialName() != null) {
+            product.setRaw(rawMaterialRepository.findByName(dto.getRawMaterialName())
+                    .orElseThrow(() -> new RecordNotFoundException("RawMaterial not found with name: " + dto.getRawMaterialName())));
+        } else {
+            product.setRaw(null);
+        }
+
+        if (dto.getComponentNames() != null) {
+            product.setComponents(dto.getComponentNames().stream()
+                    .map(name -> productComponentRepository.findByName(name)
+                            .orElseThrow(() -> new RecordNotFoundException("ProductComponent not found with name: " + name)))
+                    .collect(Collectors.toSet()));
+        } else {
+            product.setComponents(null);
+        }
 
         return product;
     }

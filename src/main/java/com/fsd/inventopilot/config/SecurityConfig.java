@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/app/products/**",
                                 "/app/raws",
                                 "/app/raws/**"
-                        ).permitAll()
+                        ).authenticated()
                         .requestMatchers(HttpMethod.PATCH,
                                 "/{id}/status"
                         ).permitAll()
