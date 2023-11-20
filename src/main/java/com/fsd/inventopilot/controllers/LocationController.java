@@ -4,6 +4,7 @@ import com.fsd.inventopilot.dtos.LocationDto;
 import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.Location;
 import com.fsd.inventopilot.services.LocationService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,7 +37,7 @@ public class LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<LocationDto> postLocation(@RequestBody LocationDto locationDto) {
+    public ResponseEntity<LocationDto> postLocation(@Valid @RequestBody LocationDto locationDto) {
         LocationDto dto = locationService.postLocation(locationDto);
 
         URI location = ServletUriComponentsBuilder
@@ -49,7 +50,7 @@ public class LocationController {
     }
 
     @PutMapping("/{department}")
-    public ResponseEntity<LocationDto> updateLocation(@PathVariable Department department, @RequestBody LocationDto newLocation) {
+    public ResponseEntity<LocationDto> updateLocation(@PathVariable Department department, @Valid @RequestBody LocationDto newLocation) {
         LocationDto dto = locationService.updateLocation(department, newLocation);
 
         return ResponseEntity.ok().body(dto);
@@ -63,7 +64,7 @@ public class LocationController {
     }
 
     @PatchMapping("/{department}")
-    public ResponseEntity<LocationDto> updateLocationDetails(@PathVariable Department department, @RequestBody LocationDto updatedLocation) {
+    public ResponseEntity<LocationDto> updateLocationDetails(@PathVariable Department department, @Valid @RequestBody LocationDto updatedLocation) {
         LocationDto dto = locationService.updateLocationDetails(department, updatedLocation);
 
         return ResponseEntity.ok().body(dto);

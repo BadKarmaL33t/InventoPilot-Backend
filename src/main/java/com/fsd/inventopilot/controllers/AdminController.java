@@ -3,6 +3,7 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.UserDto;
 import com.fsd.inventopilot.models.User;
 import com.fsd.inventopilot.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class AdminController {
     }
 
     @PatchMapping("/{username}")
-    public ResponseEntity<UserDto> updateUserDetails(@PathVariable String username, @RequestBody UserDto updatedUser) {
+    public ResponseEntity<UserDto> updateUserDetails(@PathVariable String username,@Valid @RequestBody UserDto updatedUser) {
         UserDto dto = userService.updateUserDetails(username, updatedUser);
 
         return ResponseEntity.ok().body(dto);

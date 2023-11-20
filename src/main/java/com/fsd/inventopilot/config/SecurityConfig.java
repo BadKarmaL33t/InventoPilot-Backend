@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/app/products",
                                 "/app/products/**",
                                 "/app/raws",
-                                "/app/raws/**"
+                                "/app/raws/**",
+                                "/app/files/download/**"
                         ).authenticated()
                         .requestMatchers(HttpMethod.PATCH,
                                 "/order/{id}/status"
@@ -60,7 +61,8 @@ public class SecurityConfig {
                                 "/app/products",
                                 "/app/products/**",
                                 "/app/raws",
-                                "/app/raws/**"
+                                "/app/raws/**",
+                                "/app/files/upload"
                         ).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST,
                                 "/app/locations",

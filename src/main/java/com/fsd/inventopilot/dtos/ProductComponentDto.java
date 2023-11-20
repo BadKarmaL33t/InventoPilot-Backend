@@ -5,6 +5,7 @@ import com.fsd.inventopilot.models.Department;
 import com.fsd.inventopilot.models.ProductStatus;
 import com.fsd.inventopilot.validations.AllowedComponentType;
 import com.fsd.inventopilot.validations.AllowedProductStatus;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -18,20 +19,18 @@ public class ProductComponentDto {
     private String name;
     @AllowedComponentType
     private ComponentType componentType;
-    @Pattern(regexp = "[0-9]+")
+    @Digits(integer = 10, fraction = 0)
     private int stock;
     @AllowedProductStatus
     private ProductStatus productStatus;
-    @Pattern(regexp = "[0-9]+")
+    @Digits(integer = 10, fraction = 0)
     private int used;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String serialNumber;
-    @Pattern(regexp = "[0-9]+")
+    @Digits(integer = 10, fraction = 0)
     private int minimalStock;
-    @Pattern(regexp = "[0-9]+")
+    @Digits(integer = 10, fraction = 0)
     private int maximalStock;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<Department> locationNames;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<String> productNames;
 }

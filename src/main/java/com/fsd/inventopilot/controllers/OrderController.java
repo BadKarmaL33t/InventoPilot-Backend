@@ -4,6 +4,7 @@ import com.fsd.inventopilot.dtos.OrderDto;
 import com.fsd.inventopilot.dtos.OrderProductDto;
 import com.fsd.inventopilot.models.Order;
 import com.fsd.inventopilot.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -38,7 +39,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) throws ParseException {
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderDto orderDto) throws ParseException {
         OrderDto dto = orderService.createOrder(orderDto);
 
         URI location = ServletUriComponentsBuilder
@@ -51,14 +52,14 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/add-items")
-    public ResponseEntity<OrderDto> addProductToOrder(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
+    public ResponseEntity<OrderDto> addProductToOrder(@PathVariable Long id, @Valid @RequestBody List<OrderProductDto> orderProductDtos) {
         OrderDto dto = orderService.addProductToOrder(id, orderProductDtos);
 
         return ResponseEntity.ok().body(dto);
     }
 
     @PatchMapping("/{id}/subtract-items")
-    public ResponseEntity<OrderDto> subtractOrderProducts(@PathVariable Long id, @RequestBody List<OrderProductDto> orderProductDtos) {
+    public ResponseEntity<OrderDto> subtractOrderProducts(@PathVariable Long id, @Valid @RequestBody List<OrderProductDto> orderProductDtos) {
         OrderDto dto = orderService.subtractOrderProducts(id, orderProductDtos);
 
         return ResponseEntity.ok().body(dto);
@@ -75,7 +76,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @RequestBody OrderDto newOrder) throws ParseException {
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDto newOrder) throws ParseException {
         OrderDto dto = orderService.updateOrder(id, newOrder);
 
         return ResponseEntity.ok().body(dto);
@@ -89,7 +90,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<OrderDto> updateOrderDetails(@PathVariable Long id, @RequestBody OrderDto updatedOrder) {
+    public ResponseEntity<OrderDto> updateOrderDetails(@PathVariable Long id, @Valid @RequestBody OrderDto updatedOrder) {
         OrderDto dto = orderService.updateOrderDetails(id, updatedOrder);
 
         return ResponseEntity.ok().body(dto);
