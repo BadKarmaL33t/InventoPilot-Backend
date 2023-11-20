@@ -5,10 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FileResponseData {
+public class AttachmentDto {
 
     private String fileName;
     private String downloadURL;
     private String contentType;
-    private Long fileSize;
 }

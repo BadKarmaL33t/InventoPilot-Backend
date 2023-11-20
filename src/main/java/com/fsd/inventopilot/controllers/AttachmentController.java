@@ -1,16 +1,19 @@
 package com.fsd.inventopilot.controllers;
 
-import com.fsd.inventopilot.dtos.FileResponseData;
+import com.fsd.inventopilot.dtos.AttachmentDto;
+import com.fsd.inventopilot.dtos.AttachmentInputDto;
 import com.fsd.inventopilot.models.Attachment;
 import com.fsd.inventopilot.services.AttachmentService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -23,18 +26,21 @@ public class AttachmentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<FileResponseData> uploadAttachment(@RequestParam("file") MultipartFile file) throws Exception {
-        Attachment attachment = attachmentService.uploadAttachment(file);
-        String downloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/app/files/download/")
-                .path(String.valueOf(attachment.getId()))
-                .toUriString();
-        return ResponseEntity.ok().body(new FileResponseData(
-                attachment.getFileName(),
-                downloadURL,
-                file.getContentType(),
-                file.getSize()
-        ));
+    public ResponseEntity<AttachmentDto> uploadAttachment(@RequestPart MultipartFile file) {
+        try {
+            AttachmentInputDto inputDto = new AttachmentInputDto(
+                    StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())),
+                    file.getContentType(),
+                    file.getBytes()
+            );
+
+            AttachmentDto dto = attachmentService.uploadAttachment(inputDto);
+
+            return ResponseEntity.ok().body(dto);
+        } catch (Exception e) {
+            // Handle exceptions appropriately
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/download/{id}")

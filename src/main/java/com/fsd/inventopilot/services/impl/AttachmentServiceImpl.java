@@ -1,46 +1,51 @@
 package com.fsd.inventopilot.services.impl;
 
+import com.fsd.inventopilot.dtos.AttachmentDto;
+import com.fsd.inventopilot.dtos.AttachmentInputDto;
 import com.fsd.inventopilot.exceptions.AttachmentStorageException;
+import com.fsd.inventopilot.mappers.AttachmentDtoMapper;
 import com.fsd.inventopilot.models.Attachment;
 import com.fsd.inventopilot.repositories.AttachmentRepository;
 import com.fsd.inventopilot.services.AttachmentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository attachmentRepository;
+    private final AttachmentDtoMapper attachmentDtoMapper;
 
-    public AttachmentServiceImpl(AttachmentRepository attachmentRepository) {
+    public AttachmentServiceImpl(AttachmentRepository attachmentRepository, AttachmentDtoMapper attachmentDtoMapper) {
         this.attachmentRepository = attachmentRepository;
+        this.attachmentDtoMapper = attachmentDtoMapper;
     }
 
     @Transactional
-    public Attachment uploadAttachment(MultipartFile file) throws Exception {
-        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+    public AttachmentDto uploadAttachment(AttachmentInputDto inputDto) throws AttachmentStorageException {
+        Attachment attachment = attachmentDtoMapper.mapToEntity(inputDto);
+
         try {
-            if (filename.contains("..")) {
-                throw new AttachmentStorageException("Filename contains invalid path sequence " + filename);
-            }
-            Attachment attachment = new Attachment(
-                    filename,
-                    file.getContentType(),
-                    file.getBytes()
-            );
-            return attachmentRepository.save(attachment);
+            Attachment savedAttachment = attachmentRepository.save(attachment);
+            String downloadURL = buildDownloadURL(savedAttachment.getId());
+            return attachmentDtoMapper.mapToDto(savedAttachment, downloadURL);
         } catch (Exception e) {
-            throw new AttachmentStorageException("Could not store file " + filename + ". Please try again!", e);
+            throw new AttachmentStorageException("Could not store file " + inputDto.getFileName() + ". Please try again!", e);
         }
     }
 
+    private String buildDownloadURL(UUID attachmentId) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/app/files/download/")
+                .path(String.valueOf(attachmentId))
+                .toUriString();
+    }
+
     @Transactional
-    public Attachment downloadAttachment(UUID id) throws Exception {
+    public Attachment downloadAttachment(UUID id) throws AttachmentStorageException {
         return attachmentRepository.findById(id)
-                .orElseThrow(()-> new Exception("Attachment not found with id " + id));
+                .orElseThrow(()-> new AttachmentStorageException("Attachment not found with id " + id));
     }
 }
