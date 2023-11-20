@@ -11,6 +11,7 @@ public class AttachmentInputDto {
     private UUID id;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String fileName;
+    @Pattern(regexp = "(\\S+(\\.(?i)(jpe?g|png|gif|bmp))$)")
     private String contentType;
     private byte[] data;
 

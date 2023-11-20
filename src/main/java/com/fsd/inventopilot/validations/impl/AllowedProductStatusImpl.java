@@ -1,12 +1,12 @@
 package com.fsd.inventopilot.validations.impl;
 
-import com.fsd.inventopilot.validations.AllowedDepartment;
+import com.fsd.inventopilot.validations.AllowedProductStatus;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AllowedProductStatusImpl implements ConstraintValidator<AllowedDepartment, String> {
+public class AllowedProductStatusImpl implements ConstraintValidator<AllowedProductStatus, String> {
     @Override
-    public void initialize(AllowedDepartment allowedValue) {
+    public void initialize(AllowedProductStatus allowedValue) {
     }
 
     @Override

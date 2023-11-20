@@ -3,6 +3,7 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.RawMaterialDto;
 import com.fsd.inventopilot.models.RawMaterial;
 import com.fsd.inventopilot.services.RawMaterialService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,7 +36,7 @@ public class RawMaterialController {
     }
 
     @PostMapping
-    public ResponseEntity<RawMaterialDto> postRawMaterial(@RequestBody RawMaterialDto rawMaterialDto) {
+    public ResponseEntity<RawMaterialDto> postRawMaterial(@Valid @RequestBody RawMaterialDto rawMaterialDto) {
         RawMaterialDto dto = rawMaterialService.postRawMaterial(rawMaterialDto);
 
         URI location = ServletUriComponentsBuilder
@@ -48,7 +49,7 @@ public class RawMaterialController {
     }
 
     @PutMapping("/{name}")
-    public ResponseEntity<RawMaterialDto> updateRawMaterial(@PathVariable String name, @RequestBody RawMaterialDto newRawMaterial) {
+    public ResponseEntity<RawMaterialDto> updateRawMaterial(@PathVariable String name,@Valid @RequestBody RawMaterialDto newRawMaterial) {
         RawMaterialDto dto = rawMaterialService.updateRawMaterial(name, newRawMaterial);
 
         return ResponseEntity.ok().body(dto);
@@ -62,7 +63,7 @@ public class RawMaterialController {
     }
 
     @PatchMapping("/{name}")
-    public ResponseEntity<RawMaterialDto> updateRawMaterialDetails(@PathVariable String name, @RequestBody RawMaterialDto updatedRawMaterial) {
+    public ResponseEntity<RawMaterialDto> updateRawMaterialDetails(@PathVariable String name, @Valid @RequestBody RawMaterialDto updatedRawMaterial) {
         RawMaterialDto dto = rawMaterialService.updateRawMaterialDetails(name, updatedRawMaterial);
 
         return ResponseEntity.ok().body(dto);
