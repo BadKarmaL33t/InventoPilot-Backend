@@ -7,8 +7,6 @@ import com.fsd.inventopilot.mappers.AttachmentDtoMapper;
 import com.fsd.inventopilot.models.Attachment;
 import com.fsd.inventopilot.repositories.AttachmentRepository;
 import com.fsd.inventopilot.services.AttachmentService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
