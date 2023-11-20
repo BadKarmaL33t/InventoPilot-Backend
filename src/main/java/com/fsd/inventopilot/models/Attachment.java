@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "attachments")
 public class Attachment {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue
+    private UUID id;
     @Column(nullable = false, unique = true)
     private String fileName;
     @Column(nullable = false)

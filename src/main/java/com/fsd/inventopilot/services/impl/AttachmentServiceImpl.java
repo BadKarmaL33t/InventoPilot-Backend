@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
@@ -37,7 +38,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
     }
 
-    public Attachment downloadAttachment(Long id) throws Exception {
+    @Transactional
+    public Attachment downloadAttachment(UUID id) throws Exception {
         return attachmentRepository.findById(id)
                 .orElseThrow(()-> new Exception("Attachment not found with id " + id));
     }
