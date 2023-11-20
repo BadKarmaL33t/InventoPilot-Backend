@@ -2,6 +2,7 @@ package com.fsd.inventopilot.dtos;
 
 import com.fsd.inventopilot.models.OrderStatus;
 import com.fsd.inventopilot.validations.AllowedOrderStatus;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.Collection;
 
 @Data
 public class OrderDto {
-    @Pattern(regexp = "[0-9]+")
+    @Digits(integer = 10, fraction = 0)
     private Long id;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<OrderProductDto> orderProducts;
