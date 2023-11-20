@@ -20,7 +20,7 @@ public class AttachmentController {
         this.attachmentService = attachmentService;
     }
 
-    @PostMapping("/app/files/upload/")
+    @PostMapping("/app/files/upload")
     public FileResponseData uploadAttachment(@RequestParam("file") MultipartFile file) throws Exception {
         Attachment attachment = attachmentService.uploadAttachment(file);
         String downloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
