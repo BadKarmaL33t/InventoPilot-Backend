@@ -25,6 +25,12 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Transactional
     public AttachmentDto uploadAttachment(AttachmentInputDto inputDto) throws AttachmentStorageException {
+        // Check if the file is an image
+        if (!inputDto.isImage()) {
+            // Handle the case where a non-image file is detected
+            throw new AttachmentStorageException("Only image files are allowed!");
+        }
+
         Attachment attachment = attachmentDtoMapper.mapToEntity(inputDto);
 
         try {
