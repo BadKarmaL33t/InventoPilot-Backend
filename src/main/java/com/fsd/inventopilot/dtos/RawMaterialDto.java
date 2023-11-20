@@ -27,8 +27,6 @@ public class RawMaterialDto {
     private int minimalStock;
     @Digits(integer = 10, fraction = 0)
     private int maximalStock;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<Department> locationNames;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<String> productNames;
 }

@@ -10,15 +10,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-// custom annotation (custom annotations must be declared as public interfaces
-@Target({ElementType.FIELD}) // meta-annotation must be applied to class fields (variables)
-@Retention(RetentionPolicy.RUNTIME) // means the annotation is available at runtime and can be accessed via reflection
-@Constraint(validatedBy = AllowedProductStatusImpl.class) //  specifies the class that implements the actual validation logic for the custom constraint
-@ReportAsSingleViolation // indicates that a single violation message should be reported for the constraint, even if multiple constraints are violated
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = AllowedProductStatusImpl.class)
+@ReportAsSingleViolation
 public @interface AllowedProductStatus {
     String message() default "Invalid value. Accepted values are IN_STOCK, OUT_OF_STOCK, AWAITING_BACKORDER";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }
