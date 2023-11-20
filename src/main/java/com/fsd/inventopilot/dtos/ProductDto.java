@@ -31,10 +31,8 @@ public class ProductDto {
     private int minimalStock;
     @Digits(integer = 10, fraction = 0)
     private int maximalStock;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<Department> locationNames;
     @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private String rawMaterialName;
-    @Pattern(regexp = "^[^';<>&|/\\\\]*$")
     private Collection<String> componentNames;
 }

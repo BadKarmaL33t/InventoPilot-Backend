@@ -3,6 +3,7 @@ package com.fsd.inventopilot.controllers;
 import com.fsd.inventopilot.dtos.ProductDto;
 import com.fsd.inventopilot.models.Product;
 import com.fsd.inventopilot.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> postProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> postProduct(@Valid @RequestBody ProductDto productDto) {
         ProductDto dto = productService.postProduct(productDto);
 
         URI location = ServletUriComponentsBuilder
@@ -48,7 +49,7 @@ public class ProductController {
     }
 
     @PutMapping("/{name}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable String name, @RequestBody ProductDto newProduct) {
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable String name, @Valid @RequestBody ProductDto newProduct) {
         ProductDto dto = productService.updateProduct(name, newProduct);
 
         return ResponseEntity.ok().body(dto);
@@ -62,7 +63,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{name}")
-    public ResponseEntity<ProductDto> updateProductDetails(@PathVariable String name, @RequestBody ProductDto updatedProduct) {
+    public ResponseEntity<ProductDto> updateProductDetails(@PathVariable String name, @Valid @RequestBody ProductDto updatedProduct) {
         ProductDto dto = productService.updateProductDetails(name, updatedProduct);
 
         return ResponseEntity.ok().body(dto);

@@ -4,6 +4,7 @@ import com.fsd.inventopilot.dtos.AttachmentDto;
 import com.fsd.inventopilot.dtos.AttachmentInputDto;
 import com.fsd.inventopilot.models.Attachment;
 import com.fsd.inventopilot.services.AttachmentService;
+import jakarta.validation.Valid;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class AttachmentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AttachmentDto> uploadAttachment(@RequestPart MultipartFile file) {
+    public ResponseEntity<AttachmentDto> uploadAttachment(@Valid @RequestPart MultipartFile file) {
         try {
             AttachmentInputDto inputDto = new AttachmentInputDto(
                     StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())),
