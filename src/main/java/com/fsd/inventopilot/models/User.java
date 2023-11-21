@@ -28,6 +28,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
     private Role role;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private AttachmentEntity profilePicture;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

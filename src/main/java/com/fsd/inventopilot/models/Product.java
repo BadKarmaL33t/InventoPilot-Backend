@@ -28,4 +28,6 @@ public class Product {
     private RawMaterial raw;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products", cascade = CascadeType.ALL)
     private Collection<ProductComponent> components;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Collection<AttachmentEntity> attachmentRelations;
 }

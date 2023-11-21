@@ -21,6 +21,8 @@ public class Attachment {
     @Column(nullable = false)
     @Lob
     private byte[] data;
+    @OneToOne(mappedBy = "attachment")
+    private AttachmentEntity entityRelation;
 
     public Attachment(String filename, String contentType, byte[] bytes) {
         this.fileName = filename;
