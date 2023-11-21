@@ -34,7 +34,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Transactional
-    public AttachmentDto addImageToProfile(String entity, String identifier, AttachmentInputDto inputDto) throws AttachmentStorageException {
+    public AttachmentDto addImageToEntity(String entity, String identifier, AttachmentInputDto inputDto) throws AttachmentStorageException {
         if (Objects.equals(entity, "users")) {
             return addImageToUser(identifier, inputDto);
         } else if (Objects.equals(entity, "products")) {
@@ -62,7 +62,6 @@ public class AttachmentServiceImpl implements AttachmentService {
     private AttachmentDto addImageToProduct(String productName, AttachmentInputDto inputDto) throws AttachmentStorageException {
         Optional<Product> productOptional = productRepository.findByName(productName);
         if (productOptional.isPresent()) {
-            Product product = productOptional.get();
             // Check if the file is an image
             if (!inputDto.isImage()) {
                 // Handle the case where a non-image file is detected
