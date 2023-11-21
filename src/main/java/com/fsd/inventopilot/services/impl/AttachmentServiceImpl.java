@@ -5,8 +5,10 @@ import com.fsd.inventopilot.dtos.AttachmentInputDto;
 import com.fsd.inventopilot.exceptions.AttachmentStorageException;
 import com.fsd.inventopilot.mappers.AttachmentDtoMapper;
 import com.fsd.inventopilot.models.Attachment;
+import com.fsd.inventopilot.models.AttachmentEntity;
 import com.fsd.inventopilot.models.Product;
 import com.fsd.inventopilot.models.User;
+import com.fsd.inventopilot.repositories.AttachmentEntityRepository;
 import com.fsd.inventopilot.repositories.AttachmentRepository;
 import com.fsd.inventopilot.repositories.ProductRepository;
 import com.fsd.inventopilot.repositories.UserRepository;
@@ -25,12 +27,14 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentDtoMapper attachmentDtoMapper;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final AttachmentEntityRepository attachmentEntityRepository;
 
-    public AttachmentServiceImpl(AttachmentRepository attachmentRepository, AttachmentDtoMapper attachmentDtoMapper, UserRepository userRepository, ProductRepository productRepository) {
+    public AttachmentServiceImpl(AttachmentRepository attachmentRepository, AttachmentDtoMapper attachmentDtoMapper, UserRepository userRepository, ProductRepository productRepository, AttachmentEntityRepository attachmentEntityRepository) {
         this.attachmentRepository = attachmentRepository;
         this.attachmentDtoMapper = attachmentDtoMapper;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.attachmentEntityRepository = attachmentEntityRepository;
     }
 
     @Transactional
@@ -53,7 +57,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 // Handle the case where a non-image file is detected
                 throw new AttachmentStorageException("Only image files are allowed!");
             }
-            return processAttachment(inputDto);
+            return processAttachment(inputDto, user, null);
         } else {
             throw new AttachmentStorageException("User not found with username " + username);
         }
@@ -67,18 +71,24 @@ public class AttachmentServiceImpl implements AttachmentService {
                 // Handle the case where a non-image file is detected
                 throw new AttachmentStorageException("Only image files are allowed!");
             }
-            return processAttachment(inputDto);
+            Product product = productOptional.get();
+            return processAttachment(inputDto, null, product);
         } else {
             throw new AttachmentStorageException("Product not found with name " + productName);
         }
     }
 
-    private AttachmentDto processAttachment(AttachmentInputDto inputDto) throws AttachmentStorageException {
+    private AttachmentDto processAttachment(AttachmentInputDto inputDto, User user, Product product) throws AttachmentStorageException {
         Attachment attachment = attachmentDtoMapper.mapToEntity(inputDto);
+        AttachmentEntity relation = new AttachmentEntity();
+        relation.setAttachment(attachment);
+        relation.setUser(user);
+        relation.setProduct(product);
+
         try {
-            Attachment savedAttachment = attachmentRepository.save(attachment);
-            String downloadURL = buildDownloadURL(savedAttachment.getId());
-            return attachmentDtoMapper.mapToDto(savedAttachment, downloadURL);
+            attachmentEntityRepository.save(relation);
+            String downloadURL = buildDownloadURL(attachment.getId());
+            return attachmentDtoMapper.mapToDto(attachment, downloadURL);
         } catch (Exception e) {
             throw new AttachmentStorageException("Could not store file " + inputDto.getFileName() + ". Please try again!", e);
         }
