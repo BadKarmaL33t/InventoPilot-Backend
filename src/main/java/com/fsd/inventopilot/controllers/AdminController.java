@@ -27,7 +27,7 @@ public class AdminController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDto> getUserDetails(@PathVariable("username") String username) {
+    public ResponseEntity<UserDto> getUserDetails(@PathVariable String username) {
         UserDto dto = userService.getUserDetailsByUsername(username);
 
         return ResponseEntity.ok().body(dto);

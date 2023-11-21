@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<OrderDto>> getOrderDetails(@PathVariable("id") Long id) {
+    public ResponseEntity<Optional<OrderDto>> getOrderDetails(@PathVariable Long id) {
         Optional<OrderDto> dto = orderService.getOrderDetails(id);
 
         return ResponseEntity.ok().body(dto);

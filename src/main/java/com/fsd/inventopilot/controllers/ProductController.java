@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ProductDto> getProductDetails(@PathVariable("name") String name) {
+    public ResponseEntity<ProductDto> getProductDetails(@PathVariable String name) {
         ProductDto dto = productService.getProductDetails(name);
 
         return ResponseEntity.ok().body(dto);

@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/app/files")
+@RequestMapping("/app/{entity}/{identifier}")
 public class AttachmentController {
     private final AttachmentService attachmentService;
 
@@ -27,7 +27,7 @@ public class AttachmentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AttachmentDto> uploadAttachment(@Valid @RequestPart MultipartFile file) {
+    public ResponseEntity<AttachmentDto> addImageToEntity(@PathVariable String entity, @PathVariable String identifier, @Valid @RequestPart MultipartFile file) {
         try {
             AttachmentInputDto inputDto = new AttachmentInputDto(
                     StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())),
@@ -35,7 +35,7 @@ public class AttachmentController {
                     file.getBytes()
             );
 
-            AttachmentDto dto = attachmentService.uploadAttachment(inputDto);
+            AttachmentDto dto = attachmentService.addImageToEntity(entity, identifier, inputDto);
 
             return ResponseEntity.ok().body(dto);
         } catch (Exception e) {

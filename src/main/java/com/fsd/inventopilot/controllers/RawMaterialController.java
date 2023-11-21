@@ -29,7 +29,7 @@ public class RawMaterialController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<RawMaterialDto> getRawMaterialDetails(@PathVariable("name") String name) {
+    public ResponseEntity<RawMaterialDto> getRawMaterialDetails(@PathVariable String name) {
         RawMaterialDto dto = rawMaterialService.getRawMaterialDetails(name);
 
         return ResponseEntity.ok().body(dto);

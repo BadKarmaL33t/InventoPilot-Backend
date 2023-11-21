@@ -30,7 +30,7 @@ public class LocationController {
     }
 
     @GetMapping("/{department}")
-    public ResponseEntity<LocationDto> getLocationDetails(@PathVariable("department") Department department) {
+    public ResponseEntity<LocationDto> getLocationDetails(@PathVariable Department department) {
         LocationDto dto = locationService.getLocationDetails(department);
 
         return ResponseEntity.ok().body(dto);
